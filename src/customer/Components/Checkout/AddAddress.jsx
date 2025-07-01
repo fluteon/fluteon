@@ -1,0 +1,576 @@
+// import * as React from "react";
+// import { Grid, TextField, Button, Box, CircularProgress } from "@mui/material";
+// import { useNavigate } from "react-router-dom";
+// import { useDispatch, useSelector } from "react-redux";
+// import { createOrder } from "../../../Redux/Customers/Order/Action";
+// import userEvent from "@testing-library/user-event";
+// import AddressCard from "../adreess/AdreessCard";
+// import { useState } from "react";
+
+// export default function AddDeliveryAddressForm({ handleNext, onOrderCreated }) {
+//   const navigate = useNavigate();
+//   const dispatch = useDispatch();
+//   const jwt = localStorage.getItem("jwt");
+//   const { auth } = useSelector((store) => store);
+//   const [selectedAddress, setSelectedAdress] = useState(null);
+//   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+
+// const handleCreateOrder = async (item) => {
+//   setIsPlacingOrder(true);
+//   try {
+//     const res = await dispatch(createOrder({ address: item, jwt, navigate }));
+//     const orderId = res?.payload?._id;
+//     if (orderId && onOrderCreated) {
+//       onOrderCreated(orderId); // ✅ Go to step 3 with order_id
+//     }
+//   } finally {
+//     setIsPlacingOrder(false);
+//   }
+// };
+
+// const handleSubmit = async (event) => {
+//   event.preventDefault();
+//   const data = new FormData(event.currentTarget);
+//   const address = {
+//     firstName: data.get("firstName"),
+//     lastName: data.get("lastName"),
+//     streetAddress: data.get("address"),
+//     city: data.get("city"),
+//     state: data.get("state"),
+//     zipCode: data.get("zip"),
+//     mobile: data.get("phoneNumber"),
+//   };
+
+//   setIsPlacingOrder(true);
+//   try {
+//     const res = await dispatch(createOrder({ address, jwt, navigate }));
+//     const orderId = res?.payload?._id;
+//     if (orderId && onOrderCreated) {
+//       onOrderCreated(orderId); // ✅ Go to step 3 with order_id
+//     }
+//   } finally {
+//     setIsPlacingOrder(false);
+//   }
+// };
+
+
+//   return (
+//     <Grid container spacing={4}>
+//       <Grid item xs={12} lg={5}>
+//         <Box className="border rounded-md shadow-md h-[30.5rem] overflow-y-scroll ">
+//           {auth.user?.addresses.map((item) => (
+//             <div
+//               onClick={() => setSelectedAdress(item)}
+//               className="p-5 py-7 border-b cursor-pointer"
+//             >
+//               {" "}
+//               <AddressCard address={item} />
+//               {selectedAddress?.id === item.id && (
+//                 <Button
+//                   sx={{ mt: 2 }}
+//                   size="large"
+//                   variant="contained"
+//                   color="primary"
+//                   onClick={()=>handleCreateOrder(item)}
+//                 >
+//                   {isPlacingOrder ? <CircularProgress size={24} color="inherit" /> : "Deliver Here"}
+
+//                 </Button>
+//               )}
+//             </div>
+//           ))}
+//         </Box>
+//       </Grid>
+//       <Grid item xs={12} lg={7}>
+//         <Box className="border rounded-md shadow-md p-5">
+//           <form onSubmit={handleSubmit}>
+//             <Grid container spacing={3}>
+//               <Grid item xs={12} sm={6}>
+//                 <TextField
+//                   required
+//                   id="firstName"
+//                   name="firstName"
+//                   label="First Name"
+//                   fullWidth
+//                   autoComplete="given-name"
+//                 />
+//               </Grid>
+//               <Grid item xs={12} sm={6}>
+//                 <TextField
+//                   required
+//                   id="lastName"
+//                   name="lastName"
+//                   label="Last Name"
+//                   fullWidth
+//                   autoComplete="given-name"
+//                 />
+//               </Grid>
+//               <Grid item xs={12}>
+//                 <TextField
+//                   required
+//                   id="address"
+//                   name="address"
+//                   label="Address"
+//                   fullWidth
+//                   autoComplete="shipping address"
+//                   multiline
+//                   rows={4}
+//                 />
+//               </Grid>
+//               <Grid item xs={12} sm={6}>
+//                 <TextField
+//                   required
+//                   id="city"
+//                   name="city"
+//                   label="City"
+//                   fullWidth
+//                   autoComplete="shipping address-level2"
+//                 />
+//               </Grid>
+//               <Grid item xs={12} sm={6}>
+//                 <TextField
+//                   required
+//                   id="state"
+//                   name="state"
+//                   label="State/Province/Region"
+//                   fullWidth
+//                 />
+//               </Grid>
+//               <Grid item xs={12} sm={6}>
+//                 <TextField
+//                   required
+//                   id="zip"
+//                   name="zip"
+//                   label="Zip / Postal code"
+//                   fullWidth
+//                   autoComplete="shipping postal-code"
+//                 />
+//               </Grid>
+//               <Grid item xs={12} sm={6}>
+//                 <TextField
+//                   required
+//                   id="phoneNumber"
+//                   name="phoneNumber"
+//                   label="Phone Number"
+//                   fullWidth
+//                   autoComplete="tel"
+//                 />
+//               </Grid>
+//               <Grid item xs={12}>
+//                 <Button
+//                   sx={{ padding: ".9rem 1.5rem" }}
+//                   size="large"
+//                   type="submit"
+//                   variant="contained"
+//                   color="primary"
+//                 >
+//                  {isPlacingOrder ? <CircularProgress size={24} color="inherit" /> : "Deliver Here"}
+
+//                 </Button>
+//               </Grid>
+//             </Grid>
+//           </form>
+//         </Box>
+//       </Grid>
+//       {isPlacingOrder && (
+//   <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+//     <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
+//       <span className="text-gray-800 font-semibold mb-2">Placing Order...</span>
+//       <svg
+//         className="animate-spin h-8 w-8 text-blue-600"
+//         xmlns="http://www.w3.org/2000/svg"
+//         fill="none"
+//         viewBox="0 0 24 24"
+//       >
+//         <circle
+//           className="opacity-25"
+//           cx="12"
+//           cy="12"
+//           r="10"
+//           stroke="currentColor"
+//           strokeWidth="4"
+//         ></circle>
+//         <path
+//           className="opacity-75"
+//           fill="currentColor"
+//           d="M4 12a8 8 0 018-8v8H4z"
+//         ></path>
+//       </svg>
+//     </div>
+//   </div>
+// )}
+
+//     </Grid>
+//   );
+// }
+
+
+import * as React from "react";
+import {
+  Grid,
+  TextField,
+  Button,
+  Box,
+  CircularProgress,
+  MenuItem,
+  Backdrop,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { createOrder } from "../../../Redux/Customers/Order/Action";
+import AddressCard from "../adreess/AdreessCard";
+import { useState, useEffect } from "react";
+import InputAdornment from "@mui/material/InputAdornment";
+
+
+export default function AddDeliveryAddressForm({ handleNext, onOrderCreated }) {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const jwt = localStorage.getItem("jwt");
+  const { auth } = useSelector((store) => store);
+
+  const [selectedAddress, setSelectedAdress] = useState(null);
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+  const [zipError, setZipError] = useState("");
+  const [districtFromZip, setDistrictFromZip] = useState("");
+  const [postOffices, setPostOffices] = useState([]);
+  const [loadingZip, setLoadingZip] = useState(false);
+  const [loadingStates, setLoadingStates] = useState(false);
+  const [formData, setFormData] = useState({ state: "", zip: "", mobile: "" });
+  const [phoneError, setPhoneError] = useState("");
+  const [states, setStates] = useState(["Uttar Pradesh", "Maharashtra", "Delhi", "Bihar"]);
+  const [showAllPlaces, setShowAllPlaces] = useState(false);
+
+  const displayedPlaces = showAllPlaces ? postOffices : postOffices.slice(0, 5);
+
+  const handleCreateOrder = async (item) => {
+    setIsPlacingOrder(true);
+    try {
+      const res = await dispatch(createOrder({ address: item, jwt, navigate }));
+      const orderId = res?.payload?._id;
+      if (orderId && onOrderCreated) onOrderCreated(orderId);
+    } finally {
+      setIsPlacingOrder(false);
+    }
+  };
+
+  const validateZip = async (zip) => {
+    if (!/^[1-9][0-9]{5}$/.test(zip)) return;
+    setLoadingZip(true);
+    setZipError("");
+    try {
+      const res = await fetch(`https://api.postalpincode.in/pincode/${zip}`);
+      const data = await res.json();
+      const postData = data[0];
+
+      if (postData.Status === "Success" && postData.PostOffice?.length > 0) {
+        const stateFromApi = postData.PostOffice[0].State;
+        const district = postData.PostOffice[0].District;
+        const poNames = postData.PostOffice.map((po) => po.Name);
+
+        if (formData.state.toLowerCase() !== stateFromApi.toLowerCase()) {
+          setZipError(`ZIP code district (${district}) does not match selected state (${formData.state}).`);
+          setDistrictFromZip("");
+          setPostOffices([]);
+        } else {
+          setZipError("");
+          setDistrictFromZip(district);
+          setPostOffices(poNames);
+        }
+      } else {
+        setZipError("Address at this ZIP code not available.");
+        setDistrictFromZip("");
+        setPostOffices([]);
+      }
+    } catch (err) {
+      console.error("ZIP fetch failed:", err);
+      setZipError("Failed to validate ZIP.");
+      setDistrictFromZip("");
+      setPostOffices([]);
+    }
+    setLoadingZip(false);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    let updatedValue = value;
+
+    if (name === "mobile") {
+      updatedValue = value.replace(/\D/g, "").slice(0, 10);
+      if (updatedValue.length === 10 && !/^[6-9]\d{9}$/.test(updatedValue)) {
+        setPhoneError("Invalid phone number. Must start with 6–9.");
+      } else {
+        setPhoneError("");
+      }
+    }
+
+    if (name === "zip") {
+      setZipError("");
+      setDistrictFromZip("");
+      setPostOffices([]);
+      if (/^[1-9][0-9]{5}$/.test(updatedValue)) {
+        validateZip(updatedValue);
+      }
+    }
+
+    setFormData((prev) => ({ ...prev, [name]: updatedValue }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    const address = {
+      firstName: data.get("firstName"),
+      lastName: data.get("lastName"),
+      streetAddress: data.get("address"),
+      city: data.get("city"),
+      state: data.get("state"),
+      zipCode: data.get("zip"),
+      mobile: data.get("mobile"),
+    };
+
+    if (!/^[6-9]\d{9}$/.test(formData.mobile)) {
+      setPhoneError("Enter a valid 10-digit phone number starting with 6-9.");
+      return;
+    }
+
+    setDistrictFromZip("");
+    setPostOffices([]);
+    setZipError("");
+    handleNext();
+
+    setIsPlacingOrder(true);
+    try {
+      const res = await dispatch(createOrder({ address, jwt, navigate }));
+      const orderId = res?.payload?._id;
+      if (orderId && onOrderCreated) onOrderCreated(orderId);
+    } finally {
+      setIsPlacingOrder(false);
+    }
+  };
+
+  const handlePlaceSelect = (place) => {
+    setFormData((prev) => ({
+      ...prev,
+      address: `${place}, ${prev.address || ""}`,
+    }));
+  };
+
+  useEffect(() => {
+    document.body.style.overflow = loadingZip ? "hidden" : "auto";
+  }, [loadingZip]);
+
+return (
+  <Grid container spacing={4}>
+    {/* Saved Address Section */}
+    <Grid item xs={12} lg={5}>
+      <Box className="border rounded-md shadow-md h-[30.5rem] overflow-y-scroll">
+        {auth.user?.addresses.map((item) => (
+          <div
+            key={item.id}
+            onClick={() => setSelectedAdress(item)}
+            className="p-5 py-7 border-b cursor-pointer"
+          >
+            <AddressCard address={item} />
+            {selectedAddress?.id === item.id && (
+              <Button
+                sx={{ mt: 2 }}
+                size="large"
+                variant="contained"
+                color="primary"
+                onClick={() => handleCreateOrder(item)}
+              >
+                {isPlacingOrder ? <CircularProgress size={24} color="inherit" /> : "Deliver Here"}
+              </Button>
+            )}
+          </div>
+        ))}
+      </Box>
+    </Grid>
+
+    {/* Manual Address Form Section */}
+    <Grid item xs={12} lg={7}>
+      {loadingZip && (
+        <div className="fixed inset-0 z-50 bg-white/30 backdrop-blur-sm flex items-center justify-center">
+          <div className="text-center">
+            <CircularProgress />
+            <p className="mt-4 text-gray-800 font-medium">
+              Validating ZIP code and fetching places...
+            </p>
+          </div>
+        </div>
+      )}
+
+      <Box className="border rounded-md shadow-md p-5">
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6}>
+              <TextField required id="firstName" name="firstName" label="First Name" fullWidth />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField required id="lastName" name="lastName" label="Last Name" fullWidth />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <TextField required id="city" name="city" label="City" fullWidth />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                select
+                name="state"
+                label="State"
+                fullWidth
+                required
+                value={formData.state}
+                onChange={handleChange}
+              >
+                {loadingStates ? (
+                  <MenuItem disabled>Loading states...</MenuItem>
+                ) : (
+                  states.map((stateName) => (
+                    <MenuItem key={stateName} value={stateName}>
+                      {stateName}
+                    </MenuItem>
+                  ))
+                )}
+              </TextField>
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <TextField
+                name="zip"
+                label="ZIP / Postal Code"
+                fullWidth
+                required
+                value={formData.zip}
+                onChange={handleChange}
+                onBlur={() => validateZip(formData.zip)}
+                error={!!zipError}
+                helperText={zipError}
+              />
+            </Grid>
+
+            {districtFromZip && (
+              <Grid item xs={12}>
+                <Box sx={{ color: "green", fontWeight: 500 }}>
+                  District: <strong>{districtFromZip}</strong>
+                </Box>
+              </Grid>
+            )}
+
+            {postOffices.length > 0 && (
+              <Grid item xs={12}>
+                <Box>
+                  <Box sx={{ fontWeight: 600, mb: 1 }}>Nearby Places:</Box>
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                    {displayedPlaces.map((place, idx) => (
+                      <Button
+                        key={idx}
+                onClick={() =>
+  setFormData((prev) => ({
+    ...prev,
+    address: `${place}, ${prev.address || ""}`,
+  }))
+}
+
+                        size="small"
+                        variant="outlined"
+                      >
+                        {place}
+                      </Button>
+                    ))}
+                    {postOffices.length > 5 && (
+                      <Button
+                        size="small"
+                        onClick={() => setShowAllPlaces((prev) => !prev)}
+                        sx={{ textTransform: "none" }}
+                      >
+                        {showAllPlaces ? "Show Less" : "Show More"}
+                      </Button>
+                    )}
+                  </Box>
+                </Box>
+              </Grid>
+            )}
+
+            <Grid item xs={12} sm={6}>
+<TextField
+  name="mobile"
+  label="Phone Number"
+  fullWidth
+  required
+  value={formData.mobile}
+  onChange={(e) => {
+    const onlyNums = e.target.value.replace(/\D/g, "");
+    setFormData((prev) => ({ ...prev, mobile: onlyNums }));
+    if (onlyNums.length !== 10) {
+      setPhoneError("Enter 10-digit number");
+    } else {
+      setPhoneError("");
+    }
+  }}
+  onBlur={() => {
+    if (formData.mobile.length !== 10) {
+      setPhoneError("Phone number must be 10 digits");
+    } else {
+      setPhoneError("");
+    }
+  }}
+  InputProps={{
+    startAdornment: <InputAdornment position="start">+91</InputAdornment>,
+  }}
+  error={!!phoneError}
+  helperText={phoneError}
+/>
+
+            </Grid>
+
+            <Grid item xs={12}>
+<TextField
+  required
+  id="address"
+  name="address"
+  label="Address"
+  fullWidth
+  multiline
+  rows={4}
+  value={formData.address}
+  onChange={handleChange}
+  InputLabelProps={{
+    shrink: Boolean(formData.address), // Float label if value exists
+  }}
+/>
+
+
+            </Grid>
+
+            <Grid item xs={12}>
+              <Button
+                sx={{ padding: ".9rem 1.5rem" }}
+                size="large"
+                type="submit"
+                variant="contained"
+                color="primary"
+                disabled={isPlacingOrder}
+              >
+                {isPlacingOrder ? <CircularProgress size={24} color="inherit" /> : "Deliver Here"}
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      </Box>
+    </Grid>
+
+    {/* Loader while placing order */}
+    {isPlacingOrder && (
+  <Backdrop
+    open
+    sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+  >
+    <CircularProgress color="inherit" />
+  </Backdrop>
+    )}
+  </Grid>
+);
+
+}
