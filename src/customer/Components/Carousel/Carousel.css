@@ -47,3 +47,11 @@
     background-color: #555;
   }
   
+
+  /* existing styles remain unchanged */
+
+@media (max-width: 640px) {
+  .indicators {
+    bottom: 1600px; /* or whatever value looks good */
+  }
+}

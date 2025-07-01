@@ -45,9 +45,9 @@ const actionResult = await dispatch(fetchHomepageCategoryProducts(reqData));
   }, [dispatch]);
 
   return (
-    <div>
+    <div className="">
       <HomeCarousel images={homeCarouselData} />
-      <div className="space-y-10 py-20">
+      <div className="space-y-10 ">
         {categoriesToFetch.map((cat) => (
           <HomeProductSection
             key={cat.name}
