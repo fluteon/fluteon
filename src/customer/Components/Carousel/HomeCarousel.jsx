@@ -10,7 +10,7 @@ const HomeCarousel = () => {
   const navigate = useNavigate();
   const item = homeCarouselData.map((item) => (
     <img
-      className="cursor-pointer"
+      className="cursor-pointer h-[70vh] w-full"
       onClick={() => navigate(item.path)}
       src={item.image}
       alt=""
