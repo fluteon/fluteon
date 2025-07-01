@@ -1,8 +1,120 @@
-import React from "react";
-import { Backdrop, Badge, Button, CircularProgress } from "@mui/material";
+// import React from "react";
+// import { Backdrop, Badge, Button, CircularProgress } from "@mui/material";
+// import { useLocation, useNavigate } from "react-router-dom";
+// import CartItem from "../Cart/CartItem";
+// import { useEffect } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import { getOrderById } from "../../../Redux/Customers/Order/Action";
+// import AddressCard from "../adreess/AdreessCard";
+// import { createPayment } from "../../../Redux/Customers/Payment/Action";
+
+// const OrderSummary = () => {
+//   const navigate = useNavigate();
+//   const location = useLocation();
+//   const searchParams = new URLSearchParams(location.search);
+// const orderId = searchParams.get("order_id");
+// const [isLoadingPayment, setIsLoadingPayment] = React.useState(false);
+
+// const dispatch=useDispatch();
+//   const jwt=localStorage.getItem("jwt");
+//   const {order}=useSelector(state=>state)
+
+// console.log("orderId ", order)
+
+// useEffect(()=>{
+  
+//   dispatch(getOrderById(orderId))
+// },[orderId])
+
+// const handleCreatePayment = () => {
+//   const data = { orderId: order.order?._id, jwt };
+//   setIsLoadingPayment(true);
+//   dispatch(createPayment(data))
+//     .finally(() => setIsLoadingPayment(false)); // hide loader no matter what
+// };
+
+  
+
+//   return (
+//     <div className="space-y-5">
+//         <div className="p-5 shadow-lg rounded-md border ">
+//             <AddressCard address={order.order?.shippingAddress}/>
+//         </div>
+//       <div className="lg:grid grid-cols-3 relative justify-between">
+//         <div className="lg:col-span-2 ">
+//           <div className=" space-y-3">
+//             {order.order?.orderItems.map((item) => (
+//               <>
+//                 <CartItem item={item} showButton={false}/>
+//               </>
+//             ))}
+//           </div>
+//         </div>
+//         <div className="sticky top-0 h-[100vh] mt-5 lg:mt-0 lg:ml-5">
+//           <div className="border p-5 bg-white shadow-lg rounded-md">
+//             <p className="font-bold opacity-60 pb-4">PRICE DETAILS</p>
+//             <hr />
+
+//             <div className="space-y-3 font-semibold">
+//               <div className="flex justify-between pt-3 text-black ">
+//                 <span>Price ({order.order?.totalItem} item)</span>
+//                 <span>₹{order.order?.totalPrice}</span>
+//               </div>
+//               <div className="flex justify-between">
+//                 <span>Discount</span>
+//                 <span className="text-green-700">-₹{order.order?.discounte}</span>
+//               </div>
+//               <div className="flex justify-between">
+//                 <span>Delivery Charges</span>
+//                 <span className="text-green-700">Free</span>
+//               </div>
+//               <hr />
+//               <div className="flex justify-between font-bold text-lg">
+//                 <span>Total Amount</span>
+//                 <span className="text-green-700">₹{order.order?.totalDiscountedPrice}</span>
+//               </div>
+//             </div>
+
+//             <Button
+//               onClick={handleCreatePayment}
+//               variant="contained"
+//               type="submit"
+//               sx={{ padding: ".8rem 2rem", marginTop: "2rem", width: "100%" }}
+//             >
+//               Payment
+//             </Button>
+//           </div>
+//         </div>
+//       </div>
+//       {isLoadingPayment && (
+//   <div className="">
+//     <div className="">
+//        <Backdrop
+//     open
+//     sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+//   >
+//     <CircularProgress color="inherit" />
+//   </Backdrop>
+//       <span className="text-gray-800 font-medium">Redirecting to payment...</span>
+//     </div>
+//   </div>
+// )}
+
+//     </div>
+//   );
+// };
+
+// export default OrderSummary;
+
+import React, { useEffect, useState } from "react";
+import {
+  Backdrop,
+  Badge,
+  Button,
+  CircularProgress,
+} from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import CartItem from "../Cart/CartItem";
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getOrderById } from "../../../Redux/Customers/Order/Action";
 import AddressCard from "../adreess/AdreessCard";
@@ -12,51 +124,70 @@ const OrderSummary = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-const orderId = searchParams.get("order_id");
-const [isLoadingPayment, setIsLoadingPayment] = React.useState(false);
+  const orderId = searchParams.get("order_id");
 
-const dispatch=useDispatch();
-  const jwt=localStorage.getItem("jwt");
-  const {order}=useSelector(state=>state)
+  const [isLoadingPayment, setIsLoadingPayment] = useState(false);
+  const [isLoadingOrder, setIsLoadingOrder] = useState(true); // 👈 loader state for order fetch
 
-console.log("orderId ", order)
+  const dispatch = useDispatch();
+  const jwt = localStorage.getItem("jwt");
+  const { order } = useSelector((state) => state);
 
-useEffect(()=>{
-  
-  dispatch(getOrderById(orderId))
-},[orderId])
+  useEffect(() => {
+    const fetchOrder = async () => {
+      try {
+        setIsLoadingOrder(true);
+        await dispatch(getOrderById(orderId));
+      } catch (error) {
+        console.error("Error fetching order:", error);
+      } finally {
+        setIsLoadingOrder(false); // ✅ hide loader
+      }
+    };
 
-const handleCreatePayment = () => {
-  const data = { orderId: order.order?._id, jwt };
-  setIsLoadingPayment(true);
-  dispatch(createPayment(data))
-    .finally(() => setIsLoadingPayment(false)); // hide loader no matter what
-};
+    if (orderId) fetchOrder();
+  }, [dispatch, orderId]);
 
-  
+  const handleCreatePayment = () => {
+    const data = { orderId: order.order?._id, jwt };
+    setIsLoadingPayment(true);
+    dispatch(createPayment(data)).finally(() => setIsLoadingPayment(false));
+  };
+
+  // ⏳ Show loader if order is still loading
+  if (isLoadingOrder) {
+    return (
+      <Backdrop
+        open
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      >
+        <CircularProgress color="inherit" />
+        <span className="ml-3 text-white font-medium">Loading Order...</span>
+      </Backdrop>
+    );
+  }
 
   return (
     <div className="space-y-5">
-        <div className="p-5 shadow-lg rounded-md border ">
-            <AddressCard address={order.order?.shippingAddress}/>
-        </div>
+      <div className="p-5 shadow-lg rounded-md border">
+        <AddressCard address={order.order?.shippingAddress} />
+      </div>
+
       <div className="lg:grid grid-cols-3 relative justify-between">
-        <div className="lg:col-span-2 ">
-          <div className=" space-y-3">
+        <div className="lg:col-span-2">
+          <div className="space-y-3">
             {order.order?.orderItems.map((item) => (
-              <>
-                <CartItem item={item} showButton={false}/>
-              </>
+              <CartItem key={item._id} item={item} showButton={false} />
             ))}
           </div>
         </div>
+
         <div className="sticky top-0 h-[100vh] mt-5 lg:mt-0 lg:ml-5">
           <div className="border p-5 bg-white shadow-lg rounded-md">
             <p className="font-bold opacity-60 pb-4">PRICE DETAILS</p>
             <hr />
-
             <div className="space-y-3 font-semibold">
-              <div className="flex justify-between pt-3 text-black ">
+              <div className="flex justify-between pt-3 text-black">
                 <span>Price ({order.order?.totalItem} item)</span>
                 <span>₹{order.order?.totalPrice}</span>
               </div>
@@ -71,7 +202,9 @@ const handleCreatePayment = () => {
               <hr />
               <div className="flex justify-between font-bold text-lg">
                 <span>Total Amount</span>
-                <span className="text-green-700">₹{order.order?.totalDiscountedPrice}</span>
+                <span className="text-green-700">
+                  ₹{order.order?.totalDiscountedPrice}
+                </span>
               </div>
             </div>
 
@@ -86,20 +219,18 @@ const handleCreatePayment = () => {
           </div>
         </div>
       </div>
-      {isLoadingPayment && (
-  <div className="">
-    <div className="">
-       <Backdrop
-    open
-    sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-  >
-    <CircularProgress color="inherit" />
-  </Backdrop>
-      <span className="text-gray-800 font-medium">Redirecting to payment...</span>
-    </div>
-  </div>
-)}
 
+      {isLoadingPayment && (
+        <Backdrop
+          open
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        >
+          <CircularProgress color="inherit" />
+          <span className="ml-3 text-white font-medium">
+            Redirecting to payment...
+          </span>
+        </Backdrop>
+      )}
     </div>
   );
 };
