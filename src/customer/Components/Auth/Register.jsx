@@ -1,309 +1,3 @@
-
-// by Yotube
-
-// import { Grid, TextField, Button, Box, Snackbar, Alert } from "@mui/material";
-// import { useNavigate } from "react-router-dom";
-// import { useDispatch, useSelector } from "react-redux";
-// import { getUser, register } from "../../../Redux/Auth/Action";
-// import { Fragment, useEffect, useState } from "react";
-
-// export default function RegisterUserForm({ handleNext }) {
-//   const navigate = useNavigate();
-//   const dispatch=useDispatch();
-//   const [openSnackBar,setOpenSnackBar]=useState(false);
-//   const { auth } = useSelector((store) => store);
-//   const handleClose=()=>setOpenSnackBar(false);
-
-//   const jwt=localStorage.getItem("jwt");
-
-// useEffect(()=>{
-//   if(jwt){
-//     dispatch(getUser(jwt))
-//   }
-
-// },[jwt])
-
-
-//   useEffect(() => {
-//     if (auth.user || auth.error) setOpenSnackBar(true)
-//   }, [auth.user]);
-  
-//   const handleSubmit = (event) => {
-//     event.preventDefault();
-//     const data = new FormData(event.currentTarget);
-//     // eslint-disable-next-line no-console
-//     const userData={
-//       firstName: data.get("firstName"),
-//       lastName: data.get("lastName"),
-//       email: data.get("email"),
-//       password: data.get("password"),
-      
-//     }
-//     console.log("user data",userData);
-//     dispatch(register(userData))
-  
-//   };
-
-//   return (
-//     <div className="">
-//       <form onSubmit={handleSubmit}>
-//         <Grid container spacing={3}>
-//           <Grid item xs={12} sm={6}>
-//             <TextField
-//               required
-//               id="firstName"
-//               name="firstName"
-//               label="First Name"
-//               fullWidth
-//               autoComplete="given-name"
-//             />
-//           </Grid>
-//           <Grid item xs={12} sm={6}>
-//             <TextField
-//               required
-//               id="lastName"
-//               name="lastName"
-//               label="Last Name"
-//               fullWidth
-//               autoComplete="given-name"
-//             />
-//           </Grid>
-//           <Grid item xs={12}>
-//             <TextField
-//               required
-//               id="email"
-//               name="email"
-//               label="Email"
-//               fullWidth
-//               autoComplete="given-name"
-//             />
-//           </Grid>
-//           <Grid item xs={12}>
-//             <TextField
-//               required
-//               id="password"
-//               name="password"
-//               label="Password"
-//               fullWidth
-//               autoComplete="given-name"
-//               type="password"
-//             />
-//           </Grid>
-
-//           <Grid item xs={12}>
-//             <Button
-//               className="bg-[#9155FD] w-full"
-//               type="submit"
-//               variant="contained"
-//               size="large"
-//               sx={{padding:".8rem 0"}}
-//             >
-//               Register
-//             </Button>
-//           </Grid>
-//         </Grid>
-//       </form>
-
-// <div className="flex justify-center flex-col items-center">
-//      <div className="py-3 flex items-center ">
-//         <p className="m-0 p-0">if you have already account ?</p>
-//         <Button onClick={()=> navigate("/login")} className="ml-5" size="small">
-//           Login
-//         </Button>
-//       </div>
-// </div>
-
-// <Snackbar open={openSnackBar} autoHideDuration={6000} onClose={handleClose}>
-//         <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-//           {auth.error?auth.error:auth.user?"Register Success":""}
-//         </Alert>
-//       </Snackbar>
-     
-//     </div>
-//   );
-// }
-
-
-
-// By chatgpt
-
-// import {
-//   Grid,
-//   TextField,
-//   Button,
-//   Snackbar,
-//   Alert,
-// } from "@mui/material";
-// import { useNavigate, useLocation } from "react-router-dom";
-// import { useDispatch, useSelector } from "react-redux";
-// import { getUser, register } from "../../../Redux/Auth/Action";
-// import { useEffect, useState } from "react";
-// import axios from "axios";
-
-// export default function RegisterUserForm() {
-//   const navigate = useNavigate();
-//   const location = useLocation();
-//   const dispatch = useDispatch();
-//   const [openSnackBar, setOpenSnackBar] = useState(false);
-//   const [step, setStep] = useState("phone");
-//   const [mobile, setMobile] = useState("");
-//   const { auth } = useSelector((store) => store);
-//   const jwt = localStorage.getItem("jwt");
-
-//   const handleClose = () => setOpenSnackBar(false);
-
-//   useEffect(() => {
-//     if (jwt) dispatch(getUser(jwt));
-//   }, [jwt]);
-
-//   useEffect(() => {
-//     if (auth.user || auth.error) setOpenSnackBar(true);
-//   }, [auth.user]);
-
-//   useEffect(() => {
-//     const params = new URLSearchParams(location.search);
-//     const otpId = params.get("otp_id");
-
-//     if (otpId) {
-//       setStep("form");
-//     }
-//   }, [location.search]);
-
-//   const handlePhoneSubmit = async (e) => {
-//     e.preventDefault();
-//     if (!/^[6-9]\d{9}$/.test(mobile)) {
-//       return alert("Enter a valid 10-digit mobile number");
-//     }
-
-//     try {
-//       const fullPhone = `+91${mobile}`;
-//       const response = await axios.post("http://localhost:8000/auth/send-otp", {
-//         phone: fullPhone,
-//       });
-
-//       const { otpLink } = response.data;
-//       window.location.href = otpLink;
-//     } catch (err) {
-//       console.error("OTP send error:", err);
-//     }
-//   };
-
-//   const handleRegisterSubmit = (event) => {
-//     event.preventDefault();
-//     const data = new FormData(event.currentTarget);
-
-//     const userData = {
-//       firstName: data.get("firstName"),
-//       lastName: data.get("lastName"),
-//       email: data.get("email"),
-//       password: data.get("password"),
-//       phone: `+91${mobile}`,
-//     };
-
-//     console.log("Registering:", userData);
-//     dispatch(register(userData));
-//   };
-
-//   return (
-//     <div>
-//       {step === "phone" ? (
-//         <form onSubmit={handlePhoneSubmit}>
-//           <Grid container spacing={3}>
-//             <Grid item xs={12}>
-//               <TextField
-//                 required
-//                 id="mobile"
-//                 name="mobile"
-//                 label="Enter Mobile Number"
-//                 fullWidth
-//                 value={mobile}
-//                 onChange={(e) => setMobile(e.target.value)}
-//                 InputProps={{
-//                   startAdornment: <span style={{ marginRight: "6px" }}>+91</span>,
-//                 }}
-//               />
-//             </Grid>
-//             <Grid item xs={12}>
-//               <Button
-//                 className="bg-[#9155FD] w-full"
-//                 type="submit"
-//                 variant="contained"
-//                 size="large"
-//                 sx={{ padding: ".8rem 0" }}
-//               >
-//                 Send OTP
-//               </Button>
-//             </Grid>
-//           </Grid>
-//         </form>
-//       ) : (
-//         <form onSubmit={handleRegisterSubmit}>
-//           <Grid container spacing={3}>
-//             <Grid item xs={12}>
-//               <TextField
-//                 label="Verified Phone Number"
-//                 value={`+91${mobile}`}
-//                 fullWidth
-//                 disabled
-//               />
-//             </Grid>
-//             <Grid item xs={12} sm={6}>
-//               <TextField required id="firstName" name="firstName" label="First Name" fullWidth />
-//             </Grid>
-//             <Grid item xs={12} sm={6}>
-//               <TextField required id="lastName" name="lastName" label="Last Name" fullWidth />
-//             </Grid>
-//             <Grid item xs={12}>
-//               <TextField required id="email" name="email" label="Email" fullWidth />
-//             </Grid>
-//             <Grid item xs={12}>
-//               <TextField
-//                 required
-//                 id="password"
-//                 name="password"
-//                 label="Password"
-//                 fullWidth
-//                 type="password"
-//               />
-//             </Grid>
-//             <Grid item xs={12}>
-//               <Button
-//                 className="bg-[#9155FD] w-full"
-//                 type="submit"
-//                 variant="contained"
-//                 size="large"
-//                 sx={{ padding: ".8rem 0" }}
-//               >
-//                 Register
-//               </Button>
-//             </Grid>
-//           </Grid>
-//         </form>
-//       )}
-
-//       <div className="flex justify-center flex-col items-center">
-//         <div className="py-3 flex items-center">
-//           <p className="m-0 p-0">Already have an account?</p>
-//           <Button onClick={() => navigate("/login")} className="ml-5" size="small">
-//             Login
-//           </Button>
-//         </div>
-//       </div>
-
-//       <Snackbar open={openSnackBar} autoHideDuration={6000} onClose={handleClose}>
-//         <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-//           {auth.error ? auth.error : auth.user ? "Register Success" : ""}
-//         </Alert>
-//       </Snackbar>
-//     </div>
-//   );
-// }
-
-// email verification ke sath
-
-
-
-
 import {
   Grid,
   TextField,
@@ -320,6 +14,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function RegisterUserForm() {
+    const baseUrl = process.env.REACT_APP_API_BASE_URL;
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { auth } = useSelector((store) => store);
@@ -339,6 +35,8 @@ export default function RegisterUserForm() {
   const [snackBarMessage, setSnackBarMessage] = useState("");
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const [passwordError, setPasswordError] = useState("");
+  const [registerLoading, setRegisterLoading] = useState(false);
+
 
 
   const handleSnackbar = (msg) => {
@@ -354,7 +52,7 @@ const handleSendOtp = async () => {
 
   try {
     setOtpLoading(true);
-    const res = await axios.post("http://localhost:8000/auth/send-otp", { email });
+const res = await axios.post(`${baseUrl}/auth/send-otp`, { email });
     // console.log("res data....", res);
     handleSnackbar(res.data.message || "OTP sent successfully!");
     setOtpSent(true);
@@ -382,12 +80,11 @@ const handleVerifyOtp = async () => {
 
   try {
     setVerifyingOtp(true);
-    const res = await axios.post("http://localhost:8000/auth/verify-otp", {
+    const res = await axios.post(`${baseUrl}/auth/verify-otp`, {
       email,
       otp: enteredOtp,
     });
 
-    // console.log("OTP VERIFY RESPONSE:", res.data); // 👈 Add this line
 
     if (res.data.success === true) {
       // console.log("✅ Setting Email Verified to true");
@@ -421,30 +118,32 @@ const handleVerifyOtp = async () => {
     }
   };
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
-      if (!passwordRegex.test(formData.password)) {
-    setPasswordError("Password must be at least 8 characters, include uppercase, lowercase, number & special character.");
+const handleFormSubmit = async (e) => {
+  e.preventDefault();
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
+
+  if (!passwordRegex.test(formData.password)) {
+    setPasswordError(
+      "Password must be at least 8 characters, include uppercase, lowercase, number & special character."
+    );
     return;
   } else {
-    setPasswordError(""); // clear error if valid
+    setPasswordError("");
   }
-    dispatch(register({ ...formData, email }));
-  };
+
+  try {
+    setRegisterLoading(true);
+    await dispatch(register({ ...formData, email }));
+  } finally {
+    setRegisterLoading(false);
+  }
+};
+
 
   useEffect(() => {
     if (auth.user) handleSnackbar("Register Success");
     if (auth.error) handleSnackbar(auth.error);
   }, [auth.user, auth.error]);
-
-// console.log("💥 Full State", {
-//   emailVerified,
-//   otpInputs,
-//   otpSent,
-//   email,
-//   formData,
-// });
 
   return (
     <Box>
@@ -547,9 +246,16 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
 
               </Grid>
               <Grid item xs={12}>
-                <Button type="submit" variant="contained" fullWidth>
-                  Register
-                </Button>
+<Button
+  type="submit"
+  fullWidth
+  variant="contained"
+  color="primary"
+  disabled={!emailVerified || registerLoading}
+>
+  {registerLoading ? <CircularProgress size={24} color="inherit" /> : "Register"}
+</Button>
+
               </Grid>
             </>
           )}
