@@ -1,12 +1,22 @@
-import React from 'react'
+import React from 'react';
 
 const TearmsCondition = () => {
   return (
-    <div className="min-h-screen bg-white px-6 py-12 lg:px-24 flex flex-col lg:flex-row items-center justify-center gap-12">
-      {/* Left: Text Content */}
+    <div className="min-h-screen bg-white px-4 py-12 lg:px-24 flex flex-col lg:flex-row items-center justify-center gap-12">
+      
+      {/* Image - appears first on mobile, left on desktop */}
+      <div className="w-full lg:w-1/2 flex justify-center">
+        <img
+          src="https://hub92prints.com/wp-content/uploads/2017/10/TermsAndConditions.jpg"
+          alt="Terms and Conditions Illustration"
+          className="w-full max-w-sm object-contain rounded-xl shadow-lg"
+        />
+      </div>
+
+      {/* Text */}
       <div className="w-full lg:w-1/2 max-w-2xl">
         <h2 className="text-4xl font-bold text-gray-800 mb-4">
-          Terms & Conditions - Fluteon
+          Terms & Conditions - <span className="text-pink-600">Fluteon</span>
         </h2>
         <p className="text-gray-600 mb-4">
           Welcome to Fluteon! By accessing or using our website, you agree to be
@@ -48,21 +58,10 @@ const TearmsCondition = () => {
           property of Fluteon and cannot be used without written permission.
         </p>
 
-        <p className="text-sm text-gray-500 mt-6">
-          Last updated: June 2025
-        </p>
-      </div>
-
-      {/* Right: Illustration */}
-      <div className="w-full lg:w-1/2 flex justify-center">
-        <img
-          src="https://hub92prints.com/wp-content/uploads/2017/10/TermsAndConditions.jpg"
-          alt="Terms and Conditions Illustration"
-          className="w-full max-w-sm h-full object-contain rounded-xl shadow-lg"
-        />
+        <p className="text-sm text-gray-500 mt-6">Last updated: June 2025</p>
       </div>
     </div>
   );
-}
+};
 
-export default TearmsCondition
+export default TearmsCondition;

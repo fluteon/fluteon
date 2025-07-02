@@ -20,6 +20,7 @@ import PaymentSuccess from "../customer/Components/paymentSuccess/PaymentSuccess
 import RateProduct from "../customer/Components/ReviewProduct/RateProduct";
 import About from "../Pages/About"
 import { customerTheme } from "../Theme/customeTheme";
+import NotFound from "../Pages/Notfound";
 const CustomerRoutes = () => {
     const location = useLocation();
     const showNavigation = location.pathname !== "*";
@@ -45,7 +46,7 @@ const CustomerRoutes = () => {
         <Route path="/checkout" element={<Checkout />}></Route>
         <Route path="/payment/:orderId" element={<PaymentSuccess />}></Route>
         <Route path="/about-us" element={<About /> }></Route>
-        {/* <Route path="*" element={<NotFound />} /> */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer/>
       </ThemeProvider>

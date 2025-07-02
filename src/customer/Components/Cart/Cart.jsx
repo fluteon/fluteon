@@ -58,7 +58,7 @@ useEffect(() => {
           </div>
 
           {/* Price summary */}
-          <div className="sticky top-0 h-[100vh] mt-5 lg:mt-0">
+          <div className="sticky top-0 mt-5 lg:mt-0">
             <div className="border p-5 bg-white shadow-lg rounded-md">
               <p className="font-bold opacity-60 pb-4">PRICE DETAILS</p>
               <hr />

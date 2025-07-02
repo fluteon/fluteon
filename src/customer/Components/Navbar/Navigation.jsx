@@ -80,8 +80,93 @@ export default function Navigation() {
   };
 
   return (
-    <div className="bg-white pb-10">
-      <SearchBar />
+    <>
+{/* User Info - Mobile */}
+<div className="lg:hidden sticky top-0 z-50 bg-white shadow-sm">
+  <div className="flex justify-between items-center px-4 pt-2 ">
+  {auth.user ? (
+    <div className="flex items-center justify-between w-full">
+      <div className="flex items-center space-x-3">
+        <Avatar
+  sx={{
+    bgcolor: deepPurple[500],
+    cursor: "pointer",
+    color: "#fff", // ensure white text
+    fontWeight: "bold",
+    fontSize: "1rem"
+  }}
+        >
+          {auth.user.firstName[0]?.toUpperCase()}
+        </Avatar>
+        <div>
+          <p className="text-sm font-semibold text-gray-800">
+            Hello, {auth.user.firstName}
+          </p>
+          <p className="text-xs text-gray-500">Welcome back</p>
+        </div>
+      </div>
+      <IconButton size="small" onClick={handleUserClick}>
+        <MoreVertIcon />
+      </IconButton>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleCloseUserMenu}
+        PaperProps={{
+          sx: {
+            mt: 1,
+            boxShadow: 3,
+            borderRadius: 2,
+          },
+        }}
+      >
+        <MenuItem
+          onClick={() => {
+            handleMyOrderClick();
+            handleCloseUserMenu();
+            setOpen(false);
+          }}
+        >
+          My Orders
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleLogout();
+            handleCloseUserMenu();
+            setOpen(false);
+          }}
+        >
+          Logout
+        </MenuItem>
+      </Menu>
+    </div>
+  ) : (
+    <div className="flex items-center justify-between w-full">
+      <div className="flex items-center space-x-3">
+        <Avatar
+          sx={{
+            bgcolor: deepPurple[500],
+            color: "white",
+            width: 40,
+            height: 40,
+          }}
+          onClick={handleOpen}
+          className="cursor-pointer"
+        >
+          ?
+        </Avatar>
+        <div>
+          <p className="text-sm font-semibold text-gray-800">Guest</p>
+          <p className="text-xs text-gray-500">Tap to Sign in</p>
+        </div>
+      </div>
+    </div>
+  )}
+</div>
+</div>
+ <SearchBar className="" />
+
+        <div className="bg-white pb-10 z-500">
 
       {/* Mobile menu */}
       <Transition.Root show={open} as={Fragment}>
@@ -117,52 +202,6 @@ export default function Navigation() {
                   >
                     <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                   </button>
-
-                  {auth.user ? (
-                    <div className="flex items-center space-x-2">
-                      <p className="text-sm font-semibold text-gray-700">
-                        Hello, {auth.user.firstName}
-                      </p>
-                      <IconButton size="small" onClick={handleUserClick}>
-                        <MoreVertIcon />
-                      </IconButton>
-                      <Menu
-                        anchorEl={anchorEl}
-                        open={Boolean(anchorEl)}
-                        onClose={handleCloseUserMenu}
-                      >
-                        <MenuItem
-                          onClick={() => {
-                            handleMyOrderClick();
-                            handleCloseUserMenu();
-                            setOpen(false);
-                          }}
-                        >
-                          My Orders
-                        </MenuItem>
-                        <MenuItem
-                          onClick={() => {
-                            handleLogout();
-                            handleCloseUserMenu();
-                            setOpen(false);
-                          }}
-                        >
-                          Logout
-                        </MenuItem>
-                      </Menu>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center">
-                      <Avatar
-                        sx={{ bgcolor: deepPurple[500], color: "white" }}
-                        onClick={handleOpen}
-                        className="cursor-pointer"
-                      >
-                        ?
-                      </Avatar>
-                      <p className="text-xs text-gray-500 mt-1">Sign in</p>
-                    </div>
-                  )}
                 </div>
 
                 <Tab.Group as="div">
@@ -364,12 +403,15 @@ export default function Navigation() {
   sx={{
     bgcolor: deepPurple[500],
     cursor: "pointer",
-    color: "white" // this sets the text color
+    color: "#fff", // ensure white text
+    fontWeight: "bold",
+    fontSize: "1rem"
   }}
   onClick={handleUserClick}
 >
-  {auth.user.firstName[0].toUpperCase()}
+  {auth.user.firstName[0]?.toUpperCase()}
 </Avatar>
+
 
                     <Menu
                       anchorEl={anchorEl}
@@ -409,5 +451,7 @@ export default function Navigation() {
 
       <AuthModal handleClose={handleClose} open={openAuthModal} />
     </div>
+    </>
+
   );
 }

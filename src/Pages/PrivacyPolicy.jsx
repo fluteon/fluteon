@@ -1,12 +1,22 @@
-import React from 'react'
+import React from 'react';
 
 const PrivacyPolicy = () => {
   return (
     <div className="min-h-screen bg-white px-6 py-12 lg:px-24 flex flex-col lg:flex-row items-center justify-center gap-12">
-      {/* Left: Text Content */}
+      
+      {/* Image first on mobile, left on desktop */}
+      <div className="w-full lg:w-1/2 flex justify-center">
+        <img
+          src="https://hub92prints.com/wp-content/uploads/2017/10/TermsAndConditions.jpg"
+          alt="Privacy Policy Illustration"
+          className="w-full max-w-sm h-full object-contain rounded-xl shadow-lg"
+        />
+      </div>
+
+      {/* Text Section */}
       <div className="w-full lg:w-1/2 max-w-2xl">
         <h2 className="text-4xl font-bold text-gray-800 mb-4">
-          Privacy Policy - Fluteon
+          Privacy Policy - <span className="text-pink-600">Fluteon</span>
         </h2>
         <p className="text-gray-600 mb-4">
           At Fluteon, your privacy is of utmost importance to us. We are
@@ -46,17 +56,8 @@ const PrivacyPolicy = () => {
           Last updated: June 2025
         </p>
       </div>
-
-      {/* Right: Illustration */}
-      <div className="w-full lg:w-1/2 flex justify-center">
-        <img
-          src="https://hub92prints.com/wp-content/uploads/2017/10/TermsAndConditions.jpg"
-          alt="Privacy Policy Illustration"
-          className="w-full max-w-sm h-full object-contain rounded-xl shadow-lg"
-        />
-      </div>
     </div>
   );
-}
+};
 
-export default PrivacyPolicy
+export default PrivacyPolicy;

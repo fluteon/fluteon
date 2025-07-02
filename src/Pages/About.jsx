@@ -1,13 +1,22 @@
-import React from 'react'
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const About = () => {
-  const navigate = useNavigate()
- return (
+  const navigate = useNavigate();
+  return (
     <section className="bg-gray-50 py-16">
-      <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center gap-12">
-        {/* Text content */}
-        <div className="lg:w-1/2 text-center lg:text-left">
+      <div className="container mx-auto px-4 flex flex-col lg:flex-row-reverse items-center gap-12">
+        {/* 🖼️ Image first on mobile */}
+        <div className="w-full lg:w-1/2 flex justify-center">
+          <img
+            src="https://static.vecteezy.com/system/resources/previews/012/335/177/non_2x/online-shopping-concept-with-people-buying-things-in-a-web-online-store-men-and-women-choosing-clothes-in-an-online-shop-e-commerce-and-shopping-online-illustration-in-flat-style-vector.jpg"
+            alt="About Fluteon - Women's Fashion"
+            className="max-w-full h-auto rounded-lg shadow-lg"
+          />
+        </div>
+
+        {/* 📝 Text below image on mobile, to the left on desktop */}
+        <div className="w-full lg:w-1/2 text-center lg:text-left">
           <h2 className="text-4xl font-bold text-gray-900 mb-6">
             Welcome to <span className="text-indigo-600">Fluteon</span>
           </h2>
@@ -19,23 +28,14 @@ const About = () => {
           </p>
           <button
             className="bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700 transition"
-            onClick={() =>navigate("/home")}
+            onClick={() => navigate("/home")}
           >
             Explore Collection
           </button>
         </div>
-
-        {/* Illustration */}
-        <div className="lg:w-1/2 flex justify-center">
-          <img
-            src="https://static.vecteezy.com/system/resources/previews/012/335/177/non_2x/online-shopping-concept-with-people-buying-things-in-a-web-online-store-men-and-women-choosing-clothes-in-an-online-shop-e-commerce-and-shopping-online-illustration-in-flat-style-vector.jpg"
-            alt="About Fluteon - Women's Fashion"
-            className="max-w-full h-auto rounded-lg shadow-lg"
-          />
-        </div>
       </div>
     </section>
   );
-}
+};
 
-export default About
+export default About;
