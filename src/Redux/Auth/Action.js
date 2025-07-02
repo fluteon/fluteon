@@ -101,3 +101,14 @@ export const logout = (token) => {
       localStorage.clear();
     };
   };
+
+  
+  // ✅ Load user from JWT in localStorage (for auto-login after refresh)
+export const loadUserFromToken = () => {
+  return async (dispatch) => {
+    const token = localStorage.getItem("jwt");
+    if (token) {
+      dispatch(getUser(token)); // 🔁 This will fetch and set user in Redux
+    }
+  };
+};

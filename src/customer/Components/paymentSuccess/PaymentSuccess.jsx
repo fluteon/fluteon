@@ -10,8 +10,6 @@ import AddressCard from "../adreess/AdreessCard";
 import { useParams } from "react-router-dom";
 
 const PaymentSuccess = () => {
-  // razorpay_payment_link_reference_id
-  // razorpay_payment_id
   const baseUrl = process.env.REACT_APP_API_BASE_URL
   const [paymentId, setPaymentId] = useState("");
   const [referenceId, setReferenceId] = useState("");

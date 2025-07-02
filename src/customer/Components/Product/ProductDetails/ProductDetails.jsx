@@ -247,163 +247,72 @@ if (isLoading) {
           </div>
         </section>
         {/* rating and review section */}
-        <section className="">
-          <h1 className="font-semibold text-lg pb-4 pt-8">
-            Recent Review & Ratings
-          </h1>
+<section className="">
+  <h1 className="font-semibold text-lg pb-4 pt-8">
+    Recent Review & Ratings
+  </h1>
 
-          <div className="border p-5">
-            <Grid container spacing={7}>
-              <Grid item xs={7}>
-                <div className="space-y-5">
-                  { review.reviews?.map((item, i) => (
-                    <ProductReviewCard item={item} />
-                  ))}
-                </div>
+  <div className="border p-5">
+    <Grid container spacing={5}>
+      {/* Review Section */}
+      <Grid item xs={12} md={7}>
+        <div className="space-y-5">
+          {review.reviews?.map((item, i) => (
+            <ProductReviewCard item={item} key={i} />
+          ))}
+        </div>
+      </Grid>
+
+      {/* Rating Summary */}
+      <Grid item xs={12} md={5}>
+        <h1 className="text-xl font-semibold pb-1">Product Ratings</h1>
+        <div className="flex items-center space-x-3 pb-10">
+          <Rating name="read-only" value={4.6} precision={0.5} readOnly />
+          <p className="opacity-60">42807 Ratings</p>
+        </div>
+
+        {/* Rating Bars */}
+        {[
+          { label: "Excellent", value: 40, color: "success" },
+          { label: "Very Good", value: 30, color: "success" },
+          { label: "Good", value: 25, color: "orange" },
+          {
+            label: "Average",
+            value: 21,
+            color: "#885c0a", // custom color using sx
+          },
+          { label: "Poor", value: 10, color: "error" },
+        ].map((bar, index) => (
+          <Box key={index} mb={2}>
+            <Grid container alignItems="center" spacing={1}>
+              <Grid item xs={4} sm={3}>
+                <p className="p-0">{bar.label}</p>
               </Grid>
-
-              <Grid item xs={5}>
-                <h1 className="text-xl font-semibold pb-1">Product Ratings</h1>
-                <div className="flex items-center space-x-3 pb-10">
-                  <Rating
-                    name="read-only"
-                    value={4.6}
-                    precision={0.5}
-                    readOnly
-                  />
-                  <p className="opacity-60">42807 Ratings</p>
-                </div>
-                <Box>
-                  <Grid
-                    container
-                    justifyContent="center"
-                    alignItems="center"
-                    gap={2}
-                  >
-                    <Grid xs={2}>
-                      <p className="p-0">Excellent</p>
-                    </Grid>
-                    <Grid xs={7}>
-                      <LinearProgress
-                        className=""
-                        sx={{ bgcolor: "#d0d0d0", borderRadius: 4, height: 7 }}
-                        variant="determinate"
-                        value={40}
-                        color="success"
-                      />
-                    </Grid>
-                    <Grid xs={2}>
-                      <p className="opacity-50 p-2">19259</p>
-                    </Grid>
-                  </Grid>
-                </Box>
-                <Box>
-                  <Grid
-                    container
-                    justifyContent="center"
-                    alignItems="center"
-                    gap={2}
-                  >
-                    <Grid xs={2}>
-                      <p className="p-0">Very Good</p>
-                    </Grid>
-                    <Grid xs={7}>
-                      <LinearProgress
-                        className=""
-                        sx={{ bgcolor: "#d0d0d0", borderRadius: 4, height: 7 }}
-                        variant="determinate"
-                        value={30}
-                        color="success"
-                      />
-                    </Grid>
-                    <Grid xs={2}>
-                      <p className="opacity-50 p-2">19259</p>
-                    </Grid>
-                  </Grid>
-                </Box>
-                <Box>
-                  <Grid
-                    container
-                    justifyContent="center"
-                    alignItems="center"
-                    gap={2}
-                  >
-                    <Grid xs={2}>
-                      <p className="p-0">Good</p>
-                    </Grid>
-                    <Grid xs={7}>
-                      <LinearProgress
-                        className="bg-[#885c0a]"
-                        sx={{ bgcolor: "#d0d0d0", borderRadius: 4, height: 7 }}
-                        variant="determinate"
-                        value={25}
-                        color="orange"
-                      />
-                    </Grid>
-                    <Grid xs={2}>
-                      <p className="opacity-50 p-2">19259</p>
-                    </Grid>
-                  </Grid>
-                </Box>
-                <Box>
-                  <Grid
-                    container
-                    justifyContent="center"
-                    alignItems="center"
-                    gap={2}
-                  >
-                    <Grid xs={2}>
-                      <p className="p-0">Avarage</p>
-                    </Grid>
-                    <Grid xs={7}>
-                      <LinearProgress
-                        className=""
-                        sx={{
-                          bgcolor: "#d0d0d0",
-                          borderRadius: 4,
-                          height: 7,
-                          "& .MuiLinearProgress-bar": {
-                            bgcolor: "#885c0a", // stroke color
-                          },
-                        }}
-                        variant="determinate"
-                        value={21}
-                        color="success"
-                      />
-                    </Grid>
-                    <Grid xs={2}>
-                      <p className="opacity-50 p-2">19259</p>
-                    </Grid>
-                  </Grid>
-                </Box>
-                <Box>
-                  <Grid
-                    container
-                    justifyContent="center"
-                    alignItems="center"
-                    gap={2}
-                  >
-                    <Grid xs={2}>
-                      <p className="p-0">Poor</p>
-                    </Grid>
-                    <Grid xs={7}>
-                      <LinearProgress
-                        className=""
-                        sx={{ bgcolor: "#d0d0d0", borderRadius: 4, height: 7 }}
-                        variant="determinate"
-                        value={10}
-                        color="error"
-                      />
-                    </Grid>
-                    <Grid xs={2}>
-                      <p className="opacity-50 p-2">19259</p>
-                    </Grid>
-                  </Grid>
-                </Box>
+              <Grid item xs={6} sm={7}>
+                <LinearProgress
+                  variant="determinate"
+                  value={bar.value}
+                  sx={{
+                    bgcolor: "#d0d0d0",
+                    borderRadius: 4,
+                    height: 7,
+                    "& .MuiLinearProgress-bar": {
+                      bgcolor: bar.color === "orange" ? "#ff9800" : bar.color,
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <p className="opacity-50 text-sm">19259</p>
               </Grid>
             </Grid>
-          </div>
-        </section>
+          </Box>
+        ))}
+      </Grid>
+    </Grid>
+  </div>
+</section>
+
       </div>
     </div>
   );

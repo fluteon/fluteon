@@ -1,17 +1,21 @@
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import CustomerRoutes from './Routers/CustomerRoutes';
-
-import api from '../src/config/api';
-
 import ScrollToTop from './customer/Components/ScrollTop';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { loadUserFromToken } from './Redux/Auth/Action'; 
+
 function App() {
-  const isAdmin=true;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(loadUserFromToken()); 
+  }, [dispatch]);
+
   return (
     <>
-    
       <ScrollToTop />
-      {/* <ContactSidebar /> */}
       <Routes>
         <Route path="/*" element={<CustomerRoutes />} />
       </Routes>
