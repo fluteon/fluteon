@@ -82,88 +82,92 @@ export default function Navigation() {
   return (
     <>
 {/* User Info - Mobile */}
-<div className="lg:hidden sticky top-0 z-50 bg-white shadow-sm">
-  <div className="flex justify-between items-center px-4 pt-2 ">
-  {auth.user ? (
-    <div className="flex items-center justify-between w-full">
-      <div className="flex items-center space-x-3">
-        <Avatar
-  sx={{
-    bgcolor: deepPurple[500],
-    cursor: "pointer",
-    color: "#fff", // ensure white text
-    fontWeight: "bold",
-    fontSize: "1rem"
-  }}
-        >
-          {auth.user.firstName[0]?.toUpperCase()}
-        </Avatar>
-        <div>
-          <p className="text-sm font-semibold text-gray-800">
-            Hello, {auth.user.firstName}
-          </p>
-          <p className="text-xs text-gray-500">Welcome back</p>
+{/* User Info - Mobile */}
+{!open && (
+  <div className="lg:hidden sticky top-0 z-50 bg-white shadow-sm">
+    <div className="flex justify-between items-center px-4 pt-2">
+      {auth.user ? (
+        <div className="flex items-center justify-between w-full">
+          <div className="flex items-center space-x-3">
+            <Avatar
+              sx={{
+                bgcolor: deepPurple[500],
+                cursor: "pointer",
+                color: "#fff",
+                fontWeight: "bold",
+                fontSize: "1rem",
+              }}
+            >
+              {auth.user.firstName[0]?.toUpperCase()}
+            </Avatar>
+            <div>
+              <p className="text-sm font-semibold text-gray-800">
+                Hello, {auth.user.firstName}
+              </p>
+              <p className="text-xs text-gray-500">Welcome back</p>
+            </div>
+          </div>
+          <IconButton size="small" onClick={handleUserClick}>
+            <MoreVertIcon />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleCloseUserMenu}
+            PaperProps={{
+              sx: {
+                mt: 1,
+                boxShadow: 3,
+                borderRadius: 2,
+              },
+            }}
+          >
+            <MenuItem
+              onClick={() => {
+                handleMyOrderClick();
+                handleCloseUserMenu();
+                setOpen(false);
+              }}
+            >
+              My Orders
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                handleLogout();
+                handleCloseUserMenu();
+                setOpen(false);
+              }}
+            >
+              Logout
+            </MenuItem>
+          </Menu>
         </div>
-      </div>
-      <IconButton size="small" onClick={handleUserClick}>
-        <MoreVertIcon />
-      </IconButton>
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleCloseUserMenu}
-        PaperProps={{
-          sx: {
-            mt: 1,
-            boxShadow: 3,
-            borderRadius: 2,
-          },
-        }}
-      >
-        <MenuItem
-          onClick={() => {
-            handleMyOrderClick();
-            handleCloseUserMenu();
-            setOpen(false);
-          }}
-        >
-          My Orders
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            handleLogout();
-            handleCloseUserMenu();
-            setOpen(false);
-          }}
-        >
-          Logout
-        </MenuItem>
-      </Menu>
-    </div>
-  ) : (
-    <div className="flex items-center justify-between w-full">
-      <div className="flex items-center space-x-3">
-        <Avatar
-          sx={{
-            bgcolor: deepPurple[500],
-            color: "white",
-            width: 40,
-            height: 40,
-          }}
-          onClick={handleOpen}
-          className="cursor-pointer"
-        >
-          ?
-        </Avatar>
-        <div>
-          <p className="text-sm font-semibold text-gray-800">Guest</p>
-          <p className="text-xs text-gray-500">Tap to Sign in</p>
+      ) : (
+        <div className="flex items-center justify-between w-full">
+          <div className="flex items-center space-x-3">
+            <Avatar
+              sx={{
+                bgcolor: deepPurple[500],
+                color: "white",
+                width: 40,
+                height: 40,
+              }}
+              onClick={handleOpen}
+              className="cursor-pointer"
+            >
+              ?
+            </Avatar>
+            <div>
+              <p className="text-sm font-semibold text-gray-800">Guest</p>
+              <p className="text-xs text-gray-500">Tap to Sign in</p>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
-  )}
-</div>
-</div>
+  </div>
+)}
+
  <SearchBar className="" />
 
         <div className="bg-white pb-10 z-500">
