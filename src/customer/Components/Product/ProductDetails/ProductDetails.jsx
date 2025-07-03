@@ -14,9 +14,11 @@ import { FormHelperText } from "@mui/material";
 
 const product = {
   sizes: [
-    { name: "S", inStock: true },
-    { name: "M", inStock: true },
-    { name: "L", inStock: true },
+    { name: "28", inStock: true },
+    { name: "30", inStock: true },
+    { name: "32", inStock: true },
+    { name: "34", inStock: true },
+    { name: "36", inStock: true },
   ],
  
 };
