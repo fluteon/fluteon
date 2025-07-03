@@ -5,6 +5,7 @@ import customerProductReducer from "./Customers/Product/Reducer";
 import cartReducer from "./Customers/Cart/Reducer";
 import { orderReducer } from "./Customers/Order/Reducer";
 import ReviewReducer from "./Customers/Review/Reducer";
+import queryReducer from "./Customers/Query/Reducer";
 
 
 
@@ -17,8 +18,7 @@ const rootReducers=combineReducers({
     cart:cartReducer,
     order:orderReducer,
     review:ReviewReducer,
-
-
+    query: queryReducer,
 
 });
 

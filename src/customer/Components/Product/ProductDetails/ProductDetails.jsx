@@ -27,6 +27,8 @@ function classNames(...classes) {
 }
 
 export default function ProductDetails() {
+  const [sizeChart, setSizeChart] = useState([]);
+
   const baseUrl = process.env.REACT_APP_API_BASE_URL
   const [selectedSize, setSelectedSize] = useState();
   const [activeImage, setActiveImage] = useState(null);
@@ -73,6 +75,22 @@ const handleSubmit = (e) => {
     dispatch(getAllReviews(productId));
   }, [productId]);
 
+  useEffect(() => {
+  const fetchSizeChart = async () => {
+    if (customersProduct?.product?.category?.name) {
+      try {
+        const res = await fetch(`${baseUrl}/api/admin/products/${customersProduct.product.category.name}`);
+        const data = await res.json();
+        setSizeChart(data.sizes || []);
+      } catch (error) {
+        console.error("Error fetching size chart:", error);
+      }
+    }
+  };
+
+  fetchSizeChart();
+}, [customersProduct?.product?.category?.name]);
+
 if (isLoading) {
   return (
     <Backdrop
@@ -93,9 +111,9 @@ if (isLoading) {
 
   return (
     <div className="bg-white lg:px-20">
-      <div className="pt-6">
+      <div className="">
         {/* product details */}
-        <section className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-2 px-4 pt-10">
+        <section className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-2 px-4 ">
           {/* Image gallery */}
 <div className="flex flex-col items-center">
   {/* Main Image */}
@@ -128,7 +146,7 @@ if (isLoading) {
 
 
           {/* Product info */}
-          <div className="lg:col-span-1 mx-auto max-w-2xl px-4 pb-16 sm:px-6  lg:max-w-7xl  lg:px-8 lg:pb-24">
+          <div className="lg:col-span-1 mx-auto max-w-2xl px-2 pb-8 sm:px-6  lg:max-w-7xl  lg:px-8 lg:pb-24">
             <div className="lg:col-span-2">
               <h1 className="text-lg lg:text-xl font-semibold tracking-tight text-gray-900  ">
                 {customersProduct.product?.brand}
@@ -154,7 +172,7 @@ if (isLoading) {
               </div>
 
               {/* Reviews */}
-              <div className="mt-6">
+              {/* <div className="mt-6">
                 <h3 className="sr-only">Reviews</h3>
 
                 <div className="flex items-center space-x-3">
@@ -170,13 +188,45 @@ if (isLoading) {
                     {reviews.totalCount} reviews
                   </p>
                 </div>
-              </div>
+              </div> */}
 
-              <form className="mt-10" onSubmit={handleSubmit}>
+{sizeChart.length > 0 && (
+  <div className="mt-4">
+    <h4 className="text-md font-semibold mb-2 text-gray-700">Size Chart</h4>
+    <div className="overflow-x-auto border rounded-md">
+      <table className="min-w-full text-sm text-left text-gray-700">
+        <thead className="bg-gray-100 border-b">
+          <tr>
+            <th className="px-4 py-2">Size</th>
+            {sizeChart[0]?.bust && <th className="px-4 py-2">Bust</th>}
+            {sizeChart[0]?.waist && <th className="px-4 py-2">Waist</th>}
+            {sizeChart[0]?.hips && <th className="px-4 py-2">Hips</th>}
+            {sizeChart[0]?.length && <th className="px-4 py-2">Length</th>}
+          </tr>
+        </thead>
+        <tbody>
+          {sizeChart.map((s, index) => (
+            <tr key={index} className="border-b">
+              <td className="px-4 py-2">{s.label}</td>
+              {s.bust && <td className="px-4 py-2">{s.bust}</td>}
+              {s.waist && <td className="px-4 py-2">{s.waist}</td>}
+              {s.hips && <td className="px-4 py-2">{s.hips}</td>}
+              {s.length && <td className="px-4 py-2">{s.length}</td>}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+)}
+
+
+
+              <form className="mt-4" onSubmit={handleSubmit}>
                 {/* Sizes */}
-                <div className="mt-10">
+                <div className="mt-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-medium text-gray-900">Size</h3>
+                    <h3 className="text-sm font-medium text-gray-900">Choose Size : </h3>
                   </div>
 
 <RadioGroup
@@ -247,7 +297,7 @@ if (isLoading) {
           </div>
         </section>
         {/* rating and review section */}
-<section className="">
+        <section className="">
   <h1 className="font-semibold text-lg pb-4 pt-8">
     Recent Review & Ratings
   </h1>
@@ -312,8 +362,9 @@ if (isLoading) {
     </Grid>
   </div>
 </section>
-
       </div>
     </div>
   );
 }
+
+
