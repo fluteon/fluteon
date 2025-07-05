@@ -20,105 +20,15 @@ import ReplayIcon from "@mui/icons-material/Replay";
 import DoneIcon from "@mui/icons-material/Done";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
+import StarIcon from "@mui/icons-material/Star";
+import OrderCard from "./OrderCard";
+
 const orderStatus = [
   { label: "On The Way", value: "onTheWay" },
   { label: "Delivered", value: "delevered" },
   { label: "Cancelled", value: "cancelled" },
   { label: "Returned", value: "returned" },
 ];
-
-const getStatusIcon = (status) => {
-  const normalizedStatus = status.toLowerCase();
-
-  switch (normalizedStatus) {
-    case "confirmed":
-      return <AccessTimeIcon fontSize="small" color="action" />;
-    case "shipped":
-      return <LocalShippingIcon fontSize="small" color="primary" />;
-    case "delivered":
-      return <DoneIcon fontSize="small" color="success" />;
-    case "cancelled":
-      return <CancelIcon fontSize="small" color="error" />;
-    case "returned":
-      return <ReplayIcon fontSize="small" color="warning" />;
-    default:
-      return <AccessTimeIcon fontSize="small" color="action" />;
-  }
-};
-
-const OrderCard = ({ item, order }) => {
-  const updatedDate = new Date(order.statusUpdatedAt);
-  const formattedUpdatedDate = updatedDate.toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "short",
-  });
-  const getDeliveryText = () => {
-    switch (order.orderStatus.toLowerCase()) {
-      case "delivered":
-        return "Delivered On";
-      case "shipped":
-        return "Shipped On";
-      case "cancelled":
-        return "Cancelled On";
-      case "returned":
-        return "Returned On";
-      default:
-        return "Expected Delivery";
-    }
-  };
-
-  return (
-    <Box className="bg-white p-4 rounded-lg shadow-md border">
-      <Grid container spacing={2}>
-        <Grid item xs={4}>
-          <img
-            src={item?.product?.imageUrl?.[0]}
-            alt={item?.product?.title}
-            className="w-full h-auto rounded-md object-cover"
-          />
-        </Grid>
-
-        <Grid item xs={8}>
-          <Typography className="text-sm font-semibold mb-1">
-            {item?.product?.title}
-            <span className="text-gray-600 text-xs font-normal ml-1">
-              ₹{item?.product?.discountedPrice}
-            </span>
-          </Typography>
-
-          <Typography className="text-xs text-gray-500 mb-2">
-            Size: {item?.size}
-          </Typography>
-
-          <Box className="mt-1 mb-2">
- <Chip
-  label={order.orderStatus}
-  icon={getStatusIcon(order.orderStatus)}
-  color={
-    order.orderStatus.toLowerCase() === "delivered"
-      ? "success"
-      : order.orderStatus.toLowerCase() === "cancelled"
-      ? "error"
-      : order.orderStatus.toLowerCase() === "returned"
-      ? "warning"
-      : "primary"
-  }
-  size="small"
-/>
-
-          </Box>
-
-          <Box className="mt-2 block">
-            <div className="flex items-center gap-1 text-green-600 text-xs font-medium">
-              <AccessTimeIcon fontSize="small" />
-              {getDeliveryText()}: <strong className="ml-1">{formattedUpdatedDate}</strong>
-            </div>
-          </Box>
-        </Grid>
-      </Grid>
-    </Box>
-  );
-};
 
 const Order = () => {
   const dispatch = useDispatch();

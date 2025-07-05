@@ -33,9 +33,9 @@ const Footer = () => {
             social media buddies!
           </h4>
           <div className="flex justify-center gap-6 text-white mb-4">
-            <a href="https://instagram.com" target="_blank" rel="noreferrer"><Instagram /></a>
-            <a href="https://facebook.com" target="_blank" rel="noreferrer"><Facebook /></a>
-            <a href="https://wa.me/919000000000" target="_blank" rel="noreferrer"><WhatsApp /></a>
+            <a href="https://www.instagram.com/fluteon1?igsh=NDFhZXBvamdzcnFr" target="_blank" rel="noreferrer"><Instagram /></a>
+            <a href="https://www.facebook.com/share/1GGkBWgRpV/" target="_blank" rel="noreferrer"><Facebook /></a>
+            <a href="https://wa.me/9892550941" target="_blank" rel="noreferrer"><WhatsApp /></a>
           </div>
           <p className="text-xs">© 2025 All rights reserved</p>
           <div className="flex justify-center gap-4 text-xs mt-1">

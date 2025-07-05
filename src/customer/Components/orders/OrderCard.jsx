@@ -1,71 +1,123 @@
-import { Box, Grid, Typography } from "@mui/material";
-import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
-import AdjustIcon from "@mui/icons-material/Adjust";
+import { Box, Chip, Grid, Typography } from "@mui/material";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import CancelIcon from "@mui/icons-material/Cancel";
+import ReplayIcon from "@mui/icons-material/Replay";
+import DoneIcon from "@mui/icons-material/Done";
+import StarIcon from "@mui/icons-material/Star";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import StarIcon from "@mui/icons-material/Star";
+
+const getStatusIcon = (status) => {
+  const normalizedStatus = status.toLowerCase();
+  switch (normalizedStatus) {
+    case "confirmed":
+      return <AccessTimeIcon fontSize="small" color="action" />;
+    case "shipped":
+      return <LocalShippingIcon fontSize="small" color="primary" />;
+    case "delivered":
+      return <DoneIcon fontSize="small" color="success" />;
+    case "cancelled":
+      return <CancelIcon fontSize="small" color="error" />;
+    case "returned":
+      return <ReplayIcon fontSize="small" color="warning" />;
+    default:
+      return <AccessTimeIcon fontSize="small" color="action" />;
+  }
+};
 
 const OrderCard = ({ item, order }) => {
-  const baseUrl = process.env.REACT_APP_API_BASE_URL
   const navigate = useNavigate();
-  console.log("items ", item);
+
+  const isDelivered = order.orderStatus?.toLowerCase() === "delivered";
+
+  // Format updated date
+  const updatedDate = new Date(order.statusUpdatedAt);
+  const formattedUpdatedDate = updatedDate.toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+  });
+
+  // Calculate expected delivery: 5 days from order creation
+  const createdDate = new Date(order.createdAt);
+  const expectedDateObj = new Date(createdDate);
+  expectedDateObj.setDate(createdDate.getDate() + 5);
+  const formattedExpectedDate = expectedDateObj.toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+  });
+
+  const getDeliveryText = () => {
+    const status = order.orderStatus?.toLowerCase();
+    if (status === "delivered") return `Delivered On`;
+    if (status === "shipped") return "Shipped On";
+    if (status === "cancelled") return "Cancelled On";
+    if (status === "returned") return "Returned On";
+    if (status === "confirmed") return "Expected Delivery";
+    return "Expected Delivery";
+  };
+
   return (
-    <Box className="p-5 shadow-lg hover:shadow-2xl border ">
-      <Grid spacing={2} container sx={{ justifyContent: "space-between" }}>
-        <Grid item xs={6}>
-          <div
-            onClick={() => navigate(`/account/order/${order?._id}`)}
-            className="flex cursor-pointer"
-          >
-            <img
-              className="w-[5rem] h-[5rem] object-cover object-top"
-              src={item?.product?.imageUrl?.[0]}
-              alt=""
-            />
-            <div className="ml-5">
-              <p className="mb-2">{item?.product?.title}</p>
-              <p className="opacity-50 text-xs font-semibold space-x-5">
-                <span>Size: {item?.size}</span>
-              </p>
-            </div>
-          </div>
-        </Grid>
-
-        <Grid item xs={2}>
-          <p>₹{item?.price}</p>
-        </Grid>
+    <Box className="bg-white p-4 rounded-lg shadow-md border">
+      <Grid container spacing={2}>
         <Grid item xs={4}>
-          <p className="space-y-2 font-semibold">
-            {order?.orderStatus === "DELIVERED"? (
-             <>
-             <FiberManualRecordIcon
-                  sx={{ width: "15px", height: "15px" }}
-                  className="text-green-600 p-0 mr-2 text-sm"
-                />
-                <span>Delivered On Mar 03</span>
-
-            </>
-            ):  <>
-               
-                <AdjustIcon
-                sx={{ width: "15px", height: "15px" }}
-                className="text-green-600 p-0 mr-2 text-sm"
-              />
-              <span>Expected Delivery On Mar 03</span>
-              </>}
-            
-          </p>
-          <p className="text-xs">Your Item Has Been Delivered</p>
-          {item.orderStatus === "DELIVERED" && (
-            <div
-              onClick={() => navigate(`/account/rate/{id}`)}
-              className="flex items-center text-blue-600 cursor-pointer"
-            >
-              <StarIcon sx={{ fontSize: "2rem" }} className="px-2 text-5xl" />
-              <span>Rate & Review Product</span>
-            </div>
-          )}
+          <img
+            src={item?.product?.imageUrl?.[0]}
+            alt={item?.product?.title}
+            className="w-[120px] h-[120px] object-cover rounded-md"
+          />
         </Grid>
+
+        <Grid item xs={8}>
+          <Typography className="text-sm font-semibold mb-1">
+            {item?.product?.title}
+            <span className="text-gray-600 text-xs font-normal ml-1">
+              ₹{item?.product?.discountedPrice}
+            </span>
+          </Typography>
+
+          <Typography className="text-xs text-gray-500 mb-2">
+            Size: {item?.size}
+          </Typography>
+
+          <Box className="mt-1 mb-2">
+            <Chip
+              label={order.orderStatus}
+              icon={getStatusIcon(order.orderStatus)}
+              color={
+                order.orderStatus.toLowerCase() === "delivered"
+                  ? "success"
+                  : order.orderStatus.toLowerCase() === "cancelled"
+                  ? "error"
+                  : order.orderStatus.toLowerCase() === "returned"
+                  ? "warning"
+                  : "primary"
+              }
+              size="small"
+            />
+          </Box>
+
+          <Box className="mt-2 flex items-center gap-1 text-green-600 text-xs font-medium">
+            <AccessTimeIcon fontSize="small" />
+            {getDeliveryText()}:{" "}
+            <strong className="ml-1">
+              {isDelivered ? formattedUpdatedDate : formattedExpectedDate}
+            </strong>
+          </Box>
+        </Grid>
+
+        {/* Full width Rate & Review (xs=12) */}
+        {isDelivered && (
+          <Grid item xs={12}>
+            <div
+              onClick={() => navigate(`/account/rate/${item?.product?._id}`)}
+              className="flex items-center text-blue-600 mt-2 cursor-pointer"
+            >
+              <StarIcon sx={{ fontSize: "1.5rem" }} className="mr-1" />
+              <span className="text-sm font-medium">Rate & Review Product</span>
+            </div>
+          </Grid>
+        )}
       </Grid>
     </Box>
   );
