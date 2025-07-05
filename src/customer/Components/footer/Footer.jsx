@@ -6,7 +6,7 @@ const Footer = () => {
   const navigate = useNavigate();
 
   return (
-    <footer className="bg-[#fff0f0] pt-6 text-center text-gray-800">
+    <footer className="bg-[#fff0f0] mt-4 pt-6 text-center text-gray-800">
       {/* Logo & Title */}
       <div className="flex flex-col items-center gap-2">
         <img src="/favicon.ico" alt="Fluteon Logo" className="w-10 h-12 object-contain" />
@@ -17,7 +17,6 @@ const Footer = () => {
       <div className="mt-3 flex flex-col gap-3 items-center">
         <button onClick={() => navigate("/")} className="bg-gray-200 px-6 py-2 rounded-full w-52 font-medium">Home</button>
         <button onClick={() => navigate("/about-us")} className="bg-gray-200 px-6 py-2 rounded-full w-52 font-medium">About Us</button>
-        <button onClick={() => navigate("/contact-us")} className="bg-gray-200 px-6 py-2 rounded-full w-52 font-medium">Contact Us</button>
       </div>
 
       {/* Blob-Shaped Social Section */}

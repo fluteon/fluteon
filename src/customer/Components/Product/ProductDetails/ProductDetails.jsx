@@ -8,17 +8,17 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { findProductById } from "../../../../Redux/Customers/Product/Action";
 import { addItemToCart } from "../../../../Redux/Customers/Cart/Action";
-import { getAllReviews } from "../../../../Redux/Customers/Review/Action";
+import { getAllReviews, getRatingSummary, } from "../../../../Redux/Customers/Review/Action";
 import { FormHelperText } from "@mui/material";
 
 
 const product = {
   sizes: [
-    { name: "28", inStock: true },
-    { name: "30", inStock: true },
-    { name: "32", inStock: true },
-    { name: "34", inStock: true },
-    { name: "36", inStock: true },
+    { name: "S", inStock: true },
+    { name: "M", inStock: true },
+    { name: "L", inStock: true },
+    { name: "xL", inStock: true },
+    { name: "xLL", inStock: true },
   ],
  
 };
@@ -36,12 +36,28 @@ export default function ProductDetails() {
   const [activeImage, setActiveImage] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { customersProduct,review } = useSelector((store) => store);
+const { customersProduct, review } = useSelector((store) => store);
+const ratingSummaryData = review?.reviews?.ratingSummary || {
+  totalRatings: 0,
+  averageRating: 0,
+  counts: {}
+};
+ // ✅ this works now
+
+
+// const { ratingSummary: ratingSummaryData } = useSelector((state) => state.ratingSummaryState);
+
   const { productId } = useParams();
   const jwt = localStorage.getItem("jwt");
   const [isLoading, setIsLoading] = useState(true);
   const [sizeError, setSizeError] = useState(false);
-
+const [showAll, setShowAll] = useState(false);
+const summary = review.ratingSummary || {};
+const reviewsToShow = Array.isArray(review?.reviews?.reviews)
+  ? showAll
+    ? review.reviews.reviews
+    : review.reviews.reviews.slice(0, 5)
+  : [];
 
 useEffect(() => {
   if (customersProduct?.product?.imageUrl?.length > 0) {
@@ -75,6 +91,7 @@ const handleSubmit = (e) => {
     const data = { productId: productId, jwt };
     dispatch(findProductById(data));
     dispatch(getAllReviews(productId));
+    dispatch(getRatingSummary(productId));
   }, [productId]);
 
   useEffect(() => {
@@ -110,262 +127,276 @@ if (isLoading) {
   );
 }
 
+console.log("reviews....:", review.reviews);
+console.log("ratingSummaryData:", ratingSummaryData);
 
   return (
-    <div className="bg-white lg:px-20">
-      <div className="">
-        {/* product details */}
-        <section className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-2 px-4 ">
-          {/* Image gallery */}
-<div className="flex flex-col items-center">
-  {/* Main Image */}
-  <div className="overflow-hidden rounded-lg max-w-[30rem] max-h-[35rem]">
-    <img
-      src={activeImage ? activeImage : customersProduct?.product?.imageUrl?.[0]}
-      alt="Main product"
-      className="h-full w-full object-cover object-center"
-    />
-  </div>
+<div className="bg-white">
+  <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-10 ">
+    {/* Product Details */}
+    <section className="grid grid-cols-1 lg:grid-cols-2 gap-y-10 gap-x-10">
+      {/* Image Gallery */}
+      <div className="flex flex-col items-center">
+        {/* Main Image */}
+        <div className="overflow-hidden rounded-lg max-w-[30rem] max-h-[35rem]">
+          <img
+            src={activeImage || customersProduct?.product?.imageUrl?.[0]}
+            alt="Main product"
+            className="w-full h-full object-cover object-center"
+          />
+        </div>
 
-  {/* Thumbnails */}
-  <div className="flex flex-wrap space-x-5 justify-center">
-    {customersProduct?.product?.imageUrl?.map((image, idx) => (
-      <div
-        key={image + idx}
-        onClick={() => handleSetActiveImage(image)}
-        className={`aspect-h-2 aspect-w-3 overflow-hidden rounded-lg max-w-[5rem] max-h-[5rem] mt-4 cursor-pointer 
-          ${activeImage === image ? "ring-2 ring-blue-500" : ""}`}
-      >
-        <img
-          src={image}
-          alt={`Thumbnail ${idx + 1}`}
-          className="h-full w-full object-cover object-center"
-        />
-      </div>
-    ))}
-  </div>
-</div>
-
-
-          {/* Product info */}
-          <div className="lg:col-span-1 mx-auto max-w-2xl px-2 pb-8 sm:px-6  lg:max-w-7xl  lg:px-8 lg:pb-24">
-            <div className="lg:col-span-2">
-              <h1 className="text-lg lg:text-xl font-semibold tracking-tight text-gray-900  ">
-                {customersProduct.product?.brand}
-              </h1>
-              <h1 className="text-lg lg:text-xl tracking-tight text-gray-900 opacity-60 pt-1">
-                {customersProduct.product?.title}
-              </h1>
-            </div>
-
-            {/* Options */}
-            <div className="mt-4 lg:row-span-3 lg:mt-0">
-              <h2 className="sr-only">Product information</h2>
-              <div className="flex space-x-5 items-center text-lg lg:text-xl tracking-tight text-gray-900 mt-6">
-                <p className="font-semibold">
-                  ₹{customersProduct.product?.discountedPrice}
-                </p>
-                <p className="opacity-50 line-through">
-                  ₹{customersProduct.product?.price}
-                </p>
-                <p className="text-green-600 font-semibold">
-                  {customersProduct.product?.discountPersent}% Off
-                </p>
-              </div>
-
-              {/* Reviews */}
-              {/* <div className="mt-6">
-                <h3 className="sr-only">Reviews</h3>
-
-                <div className="flex items-center space-x-3">
-                  <Rating
-                    name="read-only"
-                    value={4.6}
-                    precision={0.5}
-                    readOnly
-                  />
-
-                  <p className="opacity-60 text-sm">42807 Ratings</p>
-                  <p className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                    {reviews.totalCount} reviews
-                  </p>
-                </div>
-              </div> */}
-
-{sizeChart.length > 0 && (
-  <div className="mt-4">
-    <h4 className="text-md font-semibold mb-2 text-gray-700">Size Chart</h4>
-    <div className="overflow-x-auto border rounded-md">
-      <table className="min-w-full text-sm text-left text-gray-700">
-        <thead className="bg-gray-100 border-b">
-          <tr>
-            <th className="px-4 py-2">Size</th>
-            {sizeChart[0]?.bust && <th className="px-4 py-2">Bust</th>}
-            {sizeChart[0]?.waist && <th className="px-4 py-2">Waist</th>}
-            {sizeChart[0]?.hips && <th className="px-4 py-2">Hips</th>}
-            {sizeChart[0]?.length && <th className="px-4 py-2">Length</th>}
-          </tr>
-        </thead>
-        <tbody>
-          {sizeChart.map((s, index) => (
-            <tr key={index} className="border-b">
-              <td className="px-4 py-2">{s.label}</td>
-              {s.bust && <td className="px-4 py-2">{s.bust}</td>}
-              {s.waist && <td className="px-4 py-2">{s.waist}</td>}
-              {s.hips && <td className="px-4 py-2">{s.hips}</td>}
-              {s.length && <td className="px-4 py-2">{s.length}</td>}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  </div>
-)}
-
-
-
-              <form className="mt-4" onSubmit={handleSubmit}>
-                {/* Sizes */}
-                <div className="mt-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-medium text-gray-900">Choose Size : </h3>
-                  </div>
-
-<RadioGroup
-  value={selectedSize}
-  onChange={setSelectedSize}
-  className="mt-4"
->
-  <RadioGroup.Label className="sr-only">
-    Choose a size
-  </RadioGroup.Label>
-
-  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 w-full">
-    {product.sizes.map((size) => (
-      <RadioGroup.Option
-        key={size.name}
-        value={size}
-        disabled={!size.inStock}
-        className={({ active, checked }) =>
-          classNames(
-            size.inStock
-              ? "cursor-pointer bg-white text-gray-900 shadow-sm"
-              : "cursor-not-allowed bg-gray-50 text-gray-200",
-            active ? "ring-2 ring-indigo-500" : "",
-            checked ? "border-indigo-500" : "border-gray-300",
-            "group relative flex items-center justify-center border rounded-md py-2 px-4 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none transition-all duration-200"
-          )
-        }
-      >
-        {({ checked }) => (
-          <>
-            <RadioGroup.Label as="span">{size.name}</RadioGroup.Label>
-            {checked && (
-              <span
-                className="absolute -inset-px rounded-md ring-2 ring-indigo-500 pointer-events-none"
-                aria-hidden="true"
+        {/* Thumbnails */}
+        <div className="flex flex-wrap justify-center gap-3 mt-4">
+          {customersProduct?.product?.imageUrl?.map((image, idx) => (
+            <div
+              key={image + idx}
+              onClick={() => handleSetActiveImage(image)}
+              className={`overflow-hidden rounded-lg w-20 h-20 cursor-pointer border 
+                ${activeImage === image ? "ring-2 ring-blue-500" : ""}`}
+            >
+              <img
+                src={image}
+                alt={`Thumbnail ${idx + 1}`}
+                className="w-full h-full object-cover object-center"
               />
-            )}
-          </>
-        )}
-      </RadioGroup.Option>
-    ))}
-  </div>
-</RadioGroup>
-{sizeError && (
-  <FormHelperText error sx={{ marginTop: 1 }}>
-    Please select a size before adding to cart.
-  </FormHelperText>
-)}
-
-                </div>
-
-                <Button
-                  variant="contained"
-                  type="submit"
-                  sx={{ padding: ".8rem 2rem", marginTop: "2rem" }}
-                >
-                  Add To Cart
-                </Button>
-              </form>
             </div>
+          ))}
+        </div>
+      </div>
 
-    <div className="">
-        <h3 className=" pt-5">Description : </h3>
-                  <p className="text-base text-gray-900">
-                    {customersProduct.product?.description}
-                  </p>
-                </div>
+      {/* Product Info */}
+      <div className="lg:col-span-1 space-y-2">
+        {/* Title & Brand */}
+        <div>
+          <h1 className="text-lg lg:text-xl font-semibold tracking-tight text-gray-900">
+            {customersProduct.product?.brand}
+          </h1>
+          <h2 className="text-lg lg:text-xl tracking-tight text-gray-600 pt-1">
+            {customersProduct.product?.title}
+          </h2>
+        </div>
+
+        {/* Price Block */}
+        <div className="flex flex-wrap items-center gap-4 text-lg lg:text-xl">
+          <p className="font-semibold text-gray-900">
+            ₹{customersProduct.product?.discountedPrice}
+          </p>
+          <p className="line-through text-gray-400">
+            ₹{customersProduct.product?.price}
+          </p>
+          <p className="text-green-600 font-semibold">
+            {customersProduct.product?.discountPersent}% Off
+          </p>
+        </div>
+
+        {/* Size Chart */}
+        {sizeChart.length > 0 && (
+          <div className="">
+            <h4 className="text-md font-semibold text-gray-700 mb-2">Size Chart</h4>
+            <div className="overflow-x-auto border rounded-md">
+              <table className="min-w-full text-sm text-left text-gray-700">
+                <thead className="bg-gray-100 border-b">
+                  <tr>
+                    <th className="px-4 py-2">Size</th>
+                    {sizeChart[0]?.bust && <th className="px-4 py-2">Bust</th>}
+                    {sizeChart[0]?.waist && <th className="px-4 py-2">Waist</th>}
+                    {sizeChart[0]?.hips && <th className="px-4 py-2">Hips</th>}
+                    {sizeChart[0]?.length && <th className="px-4 py-2">Length</th>}
+                  </tr>
+                </thead>
+                <tbody>
+                  {sizeChart.map((s, i) => (
+                    <tr key={i} className="border-b">
+                      <td className="px-4 py-2">{s.label}</td>
+                      {s.bust && <td className="px-4 py-2">{s.bust}</td>}
+                      {s.waist && <td className="px-4 py-2">{s.waist}</td>}
+                      {s.hips && <td className="px-4 py-2">{s.hips}</td>}
+                      {s.length && <td className="px-4 py-2">{s.length}</td>}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </section>
-        {/* rating and review section */}
-        <section className="">
-  <h1 className="font-semibold text-lg pb-4 pt-8">
-    Recent Review & Ratings
-  </h1>
+        )}
 
-  <div className="border p-5">
+        {/* Size Selector + Add to Cart */}
+        <form className="pt-4" onSubmit={handleSubmit}>
+          <div>
+            <h3 className="text-sm font-medium text-gray-900">Choose Size:</h3>
+            <RadioGroup
+              value={selectedSize}
+              onChange={setSelectedSize}
+              className="mt-4"
+            >
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
+                {product.sizes.map((size) => (
+                  <RadioGroup.Option
+                    key={size.name}
+                    value={size}
+                    disabled={!size.inStock}
+                    className={({ active, checked }) =>
+                      classNames(
+                        size.inStock
+                          ? "cursor-pointer bg-white text-gray-900 shadow-sm"
+                          : "cursor-not-allowed bg-gray-50 text-gray-300",
+                        active ? "ring-2 ring-indigo-500" : "",
+                        checked ? "border-indigo-500" : "border-gray-300",
+                        "relative flex items-center justify-center border rounded-md py-2 px-4 text-sm font-medium uppercase hover:bg-gray-50 transition-all duration-200"
+                      )
+                    }
+                  >
+                    {({ checked }) => (
+                      <>
+                        <RadioGroup.Label as="span">{size.name}</RadioGroup.Label>
+                        {checked && (
+                          <span
+                            className="absolute -inset-px rounded-md ring-2 ring-indigo-500 pointer-events-none"
+                            aria-hidden="true"
+                          />
+                        )}
+                      </>
+                    )}
+                  </RadioGroup.Option>
+                ))}
+              </div>
+            </RadioGroup>
+            {sizeError && (
+              <FormHelperText error sx={{ marginTop: 1 }}>
+                Please select a size before adding to cart.
+              </FormHelperText>
+            )}
+          </div>
+
+          <Button
+            variant="contained"
+            type="submit"
+            sx={{ padding: ".8rem 2rem", marginTop: "2rem" }}
+          >
+            Add To Cart
+          </Button>
+        </form>
+
+        {/* Product Description */}
+        <div>
+          <h3 className="pt-5 text-md font-medium text-gray-900">Description:</h3>
+          <p className="text-base text-gray-800">
+            {customersProduct.product?.description}
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {/* Ratings & Reviews */}
+<section className="pt-10">
+  <h1 className="font-semibold text-lg pb-4">Recent Review & Ratings</h1>
+
+  <div className="border rounded-lg p-5">
     <Grid container spacing={5}>
-      {/* Review Section */}
+      {/* Review Cards */}
       <Grid item xs={12} md={7}>
         <div className="space-y-5">
-          {review.reviews?.map((item, i) => (
-            <ProductReviewCard item={item} key={i} />
-          ))}
+          {reviewsToShow.length > 0 ? (
+            reviewsToShow.map((item, i) => (
+              <ProductReviewCard item={item} key={i} />
+            ))
+          ) : (
+            <p className="text-gray-500">No reviews available.</p>
+          )}
+
+{Array.isArray(review.reviews?.reviews) && review.reviews.reviews.length > 5 && (
+            <div className="pt-4 text-center">
+              <button
+                onClick={() => setShowAll(!showAll)}
+                className="text-indigo-600 font-medium text-sm hover:underline"
+              >
+                {showAll ? "Show Less Reviews" : "Show More Reviews"}
+              </button>
+            </div>
+          )}
         </div>
       </Grid>
 
       {/* Rating Summary */}
       <Grid item xs={12} md={5}>
         <h1 className="text-xl font-semibold pb-1">Product Ratings</h1>
-        <div className="flex items-center space-x-3 pb-10">
-          <Rating name="read-only" value={4.6} precision={0.5} readOnly />
-          <p className="opacity-60">42807 Ratings</p>
-        </div>
+{!ratingSummaryData ? (
+  <div className="flex items-center space-x-3 pb-6">
+    <CircularProgress size={24} color="inherit" />
+    <p className="text-sm text-gray-400">Loading rating summary...</p>
+  </div>
+) : ratingSummaryData.totalRatings === 0 ? (
+  <p className="text-sm text-gray-400">No ratings yet.</p>
+) : (
+  <>
+    <div className="flex items-center space-x-3 pb-6">
+      <Rating
+        name="read-only"
+        value={ratingSummaryData.averageRating || 0}
+        precision={0.5}
+        readOnly
+      />
+      <p className="text-sm text-gray-500">
+        {ratingSummaryData.totalRatings} Ratings
+      </p>
+    </div>
 
-        {/* Rating Bars */}
-        {[
-          { label: "Excellent", value: 40, color: "success" },
-          { label: "Very Good", value: 30, color: "success" },
-          { label: "Good", value: 25, color: "orange" },
-          {
-            label: "Average",
-            value: 21,
-            color: "#885c0a", // custom color using sx
-          },
-          { label: "Poor", value: 10, color: "error" },
-        ].map((bar, index) => (
-          <Box key={index} mb={2}>
-            <Grid container alignItems="center" spacing={1}>
-              <Grid item xs={4} sm={3}>
-                <p className="p-0">{bar.label}</p>
-              </Grid>
-              <Grid item xs={6} sm={7}>
-                <LinearProgress
-                  variant="determinate"
-                  value={bar.value}
-                  sx={{
-                    bgcolor: "#d0d0d0",
-                    borderRadius: 4,
-                    height: 7,
-                    "& .MuiLinearProgress-bar": {
-                      bgcolor: bar.color === "orange" ? "#ff9800" : bar.color,
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid item xs={2}>
-                <p className="opacity-50 text-sm">19259</p>
-              </Grid>
-            </Grid>
-          </Box>
-        ))}
+    {[
+  { label: "Excellent", rating: 5, color: "#4caf50" },  // Green
+  { label: "Very Good", rating: 4, color: "#8bc34a" },  // Light Green
+  { label: "Good", rating: 3, color: "#ffc107" },       // Amber
+  { label: "Average", rating: 2, color: "#ff9800" },    // Orange
+  { label: "Poor", rating: 1, color: "#f44336" } 
+    ].map((bar, index) => {
+      const count = ratingSummaryData.counts?.[bar.rating] || 0;
+      const percentage = ratingSummaryData.totalRatings
+        ? (count / ratingSummaryData.totalRatings) * 100
+        : 0;
+
+return (
+  <Box key={index} mb={2}>
+    <Grid container alignItems="center" spacing={1}>
+      <Grid item xs={4} sm={3}>
+        <p className="text-sm">{bar.label}</p>
+      </Grid>
+      <Grid item xs={6} sm={7}>
+        <LinearProgress
+          variant="determinate"
+          value={percentage}
+          sx={{
+            bgcolor: "#e0e0e0",
+            borderRadius: 4,
+            height: 7,
+            "& .MuiLinearProgress-bar": {
+              backgroundColor: bar.color,
+            },
+          }}
+        />
+      </Grid>
+      <Grid item xs={2}>
+        <p className="text-sm text-gray-400">{count}</p>
+      </Grid>
+    </Grid>
+  </Box>
+);
+
+    })}
+  </>
+)}
+
+
+
+
+
       </Grid>
     </Grid>
   </div>
 </section>
-      </div>
-    </div>
+
+  </div>
+</div>
+
   );
 }
 

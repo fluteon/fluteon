@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updatePayment } from "../../../Redux/Customers/Payment/Action";
-import { Alert, AlertTitle, Box, Grid } from "@mui/material";
+import { Alert, AlertTitle, Box, Grid, Typography } from "@mui/material";
 import { deepPurple } from "@mui/material/colors";
 import StarIcon from "@mui/icons-material/Star";
 import { getOrderById } from "../../../Redux/Customers/Order/Action";
@@ -49,7 +49,9 @@ console.log("payment success", order)
   </div>
 
   <OrderTraker activeStep={1} />
-
+ <Typography className="text-xs text-gray-500 mt-4 pt-4">
+                      Track status anytime in My Orders.
+                    </Typography>
   <Grid container className="space-y-5 py-5 pt-10">
     {order.order?.orderItems.map((item) => (
       <Grid
@@ -78,6 +80,7 @@ console.log("payment success", order)
         <Grid item xs={12} md="auto" className="mt-4 sm:mt-0">
           <AddressCard address={order.order?.shippingAddress} />
         </Grid>
+
       </Grid>
     ))}
   </Grid>
