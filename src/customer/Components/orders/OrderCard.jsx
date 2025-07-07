@@ -5,6 +5,8 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import ReplayIcon from "@mui/icons-material/Replay";
 import DoneIcon from "@mui/icons-material/Done";
 import StarIcon from "@mui/icons-material/Star";
+import DirectionsBikeIcon from "@mui/icons-material/DirectionsBike"; // 🛵 for Out For Delivery
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -21,13 +23,17 @@ const getStatusIcon = (status) => {
       return <CancelIcon fontSize="small" color="error" />;
     case "returned":
       return <ReplayIcon fontSize="small" color="warning" />;
+    case "outfordelivery":
+      return <DirectionsBikeIcon fontSize="small" sx={{ color: "#FB8C00" }} />; // orange-ish
     default:
       return <AccessTimeIcon fontSize="small" color="action" />;
   }
 };
 
+
 const OrderCard = ({ item, order }) => {
   const navigate = useNavigate();
+  console.log("items... on order card : ", item)
 
   const isDelivered = order.orderStatus?.toLowerCase() === "delivered";
 
@@ -47,20 +53,21 @@ const OrderCard = ({ item, order }) => {
     month: "short",
   });
 
-  const getDeliveryText = () => {
-    const status = order.orderStatus?.toLowerCase();
-    if (status === "delivered") return `Delivered On`;
-    if (status === "shipped") return "Shipped On";
-    if (status === "cancelled") return "Cancelled On";
-    if (status === "returned") return "Returned On";
-    if (status === "confirmed") return "Expected Delivery";
-    return "Expected Delivery";
-  };
+const getDeliveryText = () => {
+  const status = order.orderStatus?.toLowerCase();
+  if (status === "delivered") return `Delivered On`;
+  if (status === "shipped") return "Shipped On";
+  if (status === "outfordelivery") return "Out For Delivery On";
+  if (status === "cancelled") return "Cancelled On";
+  if (status === "returned") return "Returned On";
+  if (status === "confirmed") return "Expected Delivery";
+  return "Expected Delivery";
+};
 
   return (
     <Box className="bg-white p-4 rounded-lg shadow-md border">
-      <Grid container spacing={2}>
-        <Grid item xs={4}>
+      <Grid container spacing={2} >
+        <Grid item xs={4} onClick={() => navigate(`/account/order/${order?._id}`)}>
           <img
             src={item?.product?.imageUrl?.[0]}
             alt={item?.product?.title}
@@ -68,33 +75,41 @@ const OrderCard = ({ item, order }) => {
           />
         </Grid>
 
-        <Grid item xs={8}>
+        <Grid item xs={8} onClick={() => navigate(`/account/order/${order?._id}`)}>
           <Typography className="text-sm font-semibold mb-1">
             {item?.product?.title}
-            <span className="text-gray-600 text-xs font-normal ml-1">
-              ₹{item?.product?.discountedPrice}
-            </span>
-          </Typography>
-
-          <Typography className="text-xs text-gray-500 mb-2">
-            Size: {item?.size}
+            <p className="text-gray-600 text-xs font-normal ml-1">
+              ₹{item?.discountedPrice}
+            </p>
+            <p className="text-gray-600 text-xs font-normal ml-1">
+            Size : {item?.size}
+          </p>
+            <p className="text-gray-600 text-xs font-normal ml-1">
+            Quantity : {item?.quantity}
+          </p>
+           <p className="text-gray-600 text-xs font-normal ml-1">
+            Color : {item?.product?.color}
+          </p>
           </Typography>
 
           <Box className="mt-1 mb-2">
-            <Chip
-              label={order.orderStatus}
-              icon={getStatusIcon(order.orderStatus)}
-              color={
-                order.orderStatus.toLowerCase() === "delivered"
-                  ? "success"
-                  : order.orderStatus.toLowerCase() === "cancelled"
-                  ? "error"
-                  : order.orderStatus.toLowerCase() === "returned"
-                  ? "warning"
-                  : "primary"
-              }
-              size="small"
-            />
+<Chip
+  label={order.orderStatus}
+  icon={getStatusIcon(order.orderStatus)}
+  color={
+    order.orderStatus.toLowerCase() === "delivered"
+      ? "success"
+      : order.orderStatus.toLowerCase() === "cancelled"
+      ? "error"
+      : order.orderStatus.toLowerCase() === "returned"
+      ? "warning"
+      : order.orderStatus.toLowerCase() === "outfordelivery"
+      ? "warning"
+      : "primary"
+  }
+  size="small"
+/>
+
           </Box>
 
           <Box className="mt-2 flex items-center gap-1 text-green-600 text-xs font-medium">

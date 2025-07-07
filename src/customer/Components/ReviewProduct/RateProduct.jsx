@@ -22,6 +22,8 @@ const RateProduct = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
 
+console.log("description : ",customersProduct)
+
   const handleRateProduct = (e, value) => {
     setRating(value);
   };
@@ -80,31 +82,13 @@ const RateProduct = () => {
           </div>
           <div className="ml-3 lg:ml-5 space-y-2 lg:space-y-4">
             <p className="lg:text-lg">{customersProduct.product?.title}</p>
-            <p className="opacity-50 font-semibold">
+            <p className="opacity-70 font-semibold">
               {customersProduct.product?.brand}
             </p>
-            <p>₹{customersProduct.product?.price}</p>
-            <p>Size: Free</p>
+            <p className="opacity-70 font-semibold">₹{customersProduct.product?.discountedPrice}</p>
             {customersProduct.product?.color && (
-              <p>Color: {customersProduct.product?.color}</p>
+              <p className="opacity-70 font-semibold"> {customersProduct.product?.color}</p>
             )}
-            <div className="flex items-center space-x-3">
-              <Rating name="read-only" value={4.6} precision={0.5} readOnly />
-              <p className="opacity-60 text-sm">42807 Ratings</p>
-              <p className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                3789 reviews
-              </p>
-            </div>
-            <div>
-              <p className="space-y-2 font-semibold">
-                <FiberManualRecordIcon
-                  sx={{ width: "15px", height: "15px" }}
-                  className="text-green-600 mr-2"
-                />
-                <span>Delivered On Mar 03</span>
-              </p>
-              <p className="text-xs">Your Item Has Been Delivered</p>
-            </div>
           </div>
         </Grid>
 

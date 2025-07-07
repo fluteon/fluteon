@@ -72,8 +72,10 @@ console.log("payment success", order)
               <p className="opacity-50 text-xs font-semibold space-x-5">
                 <span>Color: pink</span> <span>Size: {item.size}</span>
               </p>
+              <p>Quantity : {item.quantity}</p>
+              <p>₹{item.discountedPrice}</p>
               <p>Seller: {item.product.brand}</p>
-              <p>₹{item.price}</p>
+              
             </div>
           </div>
         </Grid>

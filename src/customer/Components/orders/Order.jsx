@@ -23,12 +23,15 @@ import CircularProgress from "@mui/material/CircularProgress";
 import StarIcon from "@mui/icons-material/Star";
 import OrderCard from "./OrderCard";
 
+
 const orderStatus = [
   { label: "On The Way", value: "onTheWay" },
   { label: "Delivered", value: "delevered" },
   { label: "Cancelled", value: "cancelled" },
   { label: "Returned", value: "returned" },
+  { label: "Out For Delivery", value: "outForDelivery" }, // ✅ new
 ];
+
 
 const Order = () => {
   const dispatch = useDispatch();
@@ -36,6 +39,8 @@ const Order = () => {
   const jwt = localStorage.getItem("jwt");
   const { order } = useSelector((store) => store);
   const [showFilters, setShowFilters] = useState(false);
+
+  console.log("prder on order order page:",order)
 
   useEffect(() => {
     dispatch(getOrderHistory({ jwt }));
