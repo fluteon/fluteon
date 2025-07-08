@@ -22,7 +22,7 @@ const RateProduct = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
 
-console.log("description : ",customersProduct)
+// console.log("description : ",customersProduct)
 
   const handleRateProduct = (e, value) => {
     setRating(value);

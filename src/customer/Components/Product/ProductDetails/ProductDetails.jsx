@@ -17,8 +17,8 @@ const product = {
     { name: "S", inStock: true },
     { name: "M", inStock: true },
     { name: "L", inStock: true },
-    { name: "xL", inStock: true },
-    { name: "xLL", inStock: true },
+    { name: "XL", inStock: true },
+    { name: "XXL", inStock: true },
   ],
  
 };
@@ -37,6 +37,7 @@ export default function ProductDetails() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 const { customersProduct, review } = useSelector((store) => store);
+console.log("customer product ...", customersProduct)
 const ratingSummaryData = review?.reviews?.ratingSummary || {
   totalRatings: 0,
   averageRating: 0,
@@ -127,8 +128,8 @@ if (isLoading) {
   );
 }
 
-console.log("reviews....:", review.reviews);
-console.log("ratingSummaryData:", ratingSummaryData);
+// console.log("reviews....:", review.reviews);
+// console.log("ratingSummaryData:", ratingSummaryData);
 
   return (
 <div className="bg-white">
@@ -225,43 +226,50 @@ console.log("ratingSummaryData:", ratingSummaryData);
         <form className="pt-4" onSubmit={handleSubmit}>
           <div>
             <h3 className="text-sm font-medium text-gray-900">Choose Size:</h3>
-            <RadioGroup
-              value={selectedSize}
-              onChange={setSelectedSize}
-              className="mt-4"
-            >
-              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
-                {product.sizes.map((size) => (
-                  <RadioGroup.Option
-                    key={size.name}
-                    value={size}
-                    disabled={!size.inStock}
-                    className={({ active, checked }) =>
-                      classNames(
-                        size.inStock
-                          ? "cursor-pointer bg-white text-gray-900 shadow-sm"
-                          : "cursor-not-allowed bg-gray-50 text-gray-300",
-                        active ? "ring-2 ring-indigo-500" : "",
-                        checked ? "border-indigo-500" : "border-gray-300",
-                        "relative flex items-center justify-center border rounded-md py-2 px-4 text-sm font-medium uppercase hover:bg-gray-50 transition-all duration-200"
-                      )
-                    }
-                  >
-                    {({ checked }) => (
-                      <>
-                        <RadioGroup.Label as="span">{size.name}</RadioGroup.Label>
-                        {checked && (
-                          <span
-                            className="absolute -inset-px rounded-md ring-2 ring-indigo-500 pointer-events-none"
-                            aria-hidden="true"
-                          />
-                        )}
-                      </>
-                    )}
-                  </RadioGroup.Option>
-                ))}
-              </div>
-            </RadioGroup>
+<RadioGroup
+  value={selectedSize}
+  onChange={setSelectedSize}
+  className="mt-4"
+>
+  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
+    {customersProduct.product?.sizes?.map((size) => {
+      const outOfStock = size.quantity === 0;
+
+      return (
+        <RadioGroup.Option
+          key={size.name}
+          value={size}
+          disabled={outOfStock}
+          className={({ active, checked }) =>
+            classNames(
+              outOfStock
+                ? "cursor-not-allowed bg-gray-100 text-gray-400 line-through"
+                : "cursor-pointer bg-white text-gray-900 shadow-sm hover:bg-gray-50",
+              active ? "ring-2 ring-indigo-500" : "",
+              checked ? "border-indigo-500" : "border-gray-300",
+              "relative flex items-center justify-center border rounded-md py-2 px-4 text-sm font-medium uppercase transition-all duration-200"
+            )
+          }
+        >
+          {({ checked }) => (
+            <>
+              <RadioGroup.Label as="span">
+                {size.name} {outOfStock}
+              </RadioGroup.Label>
+              {checked && !outOfStock && (
+                <span
+                  className="absolute -inset-px rounded-md ring-2 ring-indigo-500 pointer-events-none"
+                  aria-hidden="true"
+                />
+              )}
+            </>
+          )}
+        </RadioGroup.Option>
+      );
+    })}
+  </div>
+</RadioGroup>
+
             {sizeError && (
               <FormHelperText error sx={{ marginTop: 1 }}>
                 Please select a size before adding to cart.

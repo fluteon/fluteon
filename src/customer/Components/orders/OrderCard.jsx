@@ -33,7 +33,7 @@ const getStatusIcon = (status) => {
 
 const OrderCard = ({ item, order }) => {
   const navigate = useNavigate();
-  console.log("items... on order card : ", item)
+  // console.log("items... on order card : ", item)
 
   const isDelivered = order.orderStatus?.toLowerCase() === "delivered";
 
@@ -55,13 +55,55 @@ const OrderCard = ({ item, order }) => {
 
 const getDeliveryText = () => {
   const status = order.orderStatus?.toLowerCase();
-  if (status === "delivered") return `Delivered On`;
-  if (status === "shipped") return "Shipped On";
-  if (status === "outfordelivery") return "Out For Delivery On";
-  if (status === "cancelled") return "Cancelled On";
-  if (status === "returned") return "Returned On";
-  if (status === "confirmed") return "Expected Delivery";
-  return "Expected Delivery";
+  switch (status) {
+    case "confirmed":
+      return "Expected Delivery";
+    case "shipped":
+      return "Shipped On";
+    case "outfordelivery":
+      return "Out For Delivery On";
+    case "delivered":
+      return "Delivered On";
+    case "cancelled":
+      return "Cancelled On";
+    case "returned":
+      return "Returned On";
+    default:
+      return "Expected Delivery";
+  }
+};
+
+const getDeliveryDate = () => {
+  const status = order.orderStatus?.toLowerCase();
+  const statusUpdated = new Date(order.statusUpdatedAt);
+  const expected = new Date(order.createdAt);
+  expected.setDate(expected.getDate() + 4); // expected delivery 4 days from creation
+
+  if (status === "confirmed") return expected.toLocaleDateString("en-IN", { day: "2-digit", month: "short" });
+  if (["shipped", "outfordelivery", "delivered", "cancelled", "returned"].includes(status)) {
+    return statusUpdated.toLocaleDateString("en-IN", { day: "2-digit", month: "short" });
+  }
+  return expected.toLocaleDateString("en-IN", { day: "2-digit", month: "short" });
+};
+
+const shouldShowExpectedDate = () => {
+  const status = order.orderStatus?.toLowerCase();
+  return status === "confirmed" || status === "shipped";
+};
+
+const getExpectedDate = () => {
+  const expected = new Date(order.createdAt);
+  expected.setDate(expected.getDate() + 4);
+  return expected.toLocaleDateString("en-IN", { day: "2-digit", month: "short" });
+};
+
+const getExpectedMessage = () => {
+  const status = order.orderStatus?.toLowerCase();
+  const expectedDate = getExpectedDate();
+
+  if (status === "delivered") return null;
+  if (status === "outfordelivery") return "Your item's is Out for Delivery, It will be delivered today";
+  return `Expected by: ${expectedDate}`;
 };
 
   return (
@@ -92,35 +134,42 @@ const getDeliveryText = () => {
           </p>
           </Typography>
 
-          <Box className="mt-1 mb-2">
-<Chip
-  label={order.orderStatus}
-  icon={getStatusIcon(order.orderStatus)}
-  color={
-    order.orderStatus.toLowerCase() === "delivered"
-      ? "success"
-      : order.orderStatus.toLowerCase() === "cancelled"
-      ? "error"
-      : order.orderStatus.toLowerCase() === "returned"
-      ? "warning"
-      : order.orderStatus.toLowerCase() === "outfordelivery"
-      ? "warning"
-      : "primary"
-  }
-  size="small"
-/>
+<Box className="mt-1 mb-2">
+  <Chip
+    label={order.orderStatus}
+    icon={getStatusIcon(order.orderStatus)}
+    color={
+      order.orderStatus.toLowerCase() === "delivered"
+        ? "success"
+        : order.orderStatus.toLowerCase() === "cancelled"
+        ? "error"
+        : order.orderStatus.toLowerCase() === "returned"
+        ? "warning"
+        : order.orderStatus.toLowerCase() === "outfordelivery"
+        ? "warning"
+        : "primary"
+    }
+    size="small"
+  />
 
-          </Box>
+  {/* ✅ Show the action date like: Shipped On: 08 Jul */}
+  <Box sx={{marginTop : "6px", fontSize: '16px'}} className="">
+    {getDeliveryText()}:{" "}
+    <span className="font-medium text-black">{getDeliveryDate()}</span>
+  </Box>
+</Box>
 
-          <Box className="mt-2 flex items-center gap-1 text-green-600 text-xs font-medium">
-            <AccessTimeIcon fontSize="small" />
-            {getDeliveryText()}:{" "}
-            <strong className="ml-1">
-              {isDelivered ? formattedUpdatedDate : formattedExpectedDate}
-            </strong>
-          </Box>
+
+
+
+
         </Grid>
-
+{getExpectedMessage() && (
+  <Box className=" mx-2 mt-1 flex items-center gap-1 text-orange-500 text-xs font-medium">
+    <AccessTimeIcon fontSize="small" />
+    {getExpectedMessage()}
+  </Box>
+)}
         {/* Full width Rate & Review (xs=12) */}
         {isDelivered && (
           <Grid item xs={12}>

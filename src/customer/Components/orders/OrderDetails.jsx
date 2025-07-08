@@ -23,6 +23,7 @@ import {
   Cancel,
   Replay,
   Done,
+  Margin,
 } from "@mui/icons-material";
 
 const statusStepMap = {
@@ -58,7 +59,6 @@ const getStatusIcon = (status) => {
 };
 
 
-
 const OrderDetails = () => {
   const { orderId } = useParams();
   const dispatch = useDispatch();
@@ -75,6 +75,47 @@ const normalizeStatus = (status = "") => status.toUpperCase().replace(/\s+/g, ""
 const currentOrder = order?.order; // ✅ Move this here
 const status = normalizeStatus(currentOrder?.orderStatus);
 const activeStep = statusStepMap[status] ?? 0;
+
+const createdDate = new Date(currentOrder?.createdAt);
+const expectedDateObj = new Date(createdDate);
+expectedDateObj.setDate(createdDate.getDate() + 4);
+
+const formattedExpectedDate = expectedDateObj.toLocaleDateString("en-IN", {
+  day: "2-digit",
+  month: "short",
+});
+
+const shouldShowExpectedDate = !["DELIVERED", "CANCELLED", "RETURNED"].includes(status);
+const isOutForDelivery = status === "OUTFORDELIVERY";
+
+const getDeliveryText = () => {
+  switch (status) {
+    case "PLACED":
+      return "Order Placed On";
+    case "CONFIRMED":
+      return "Confirmed On";
+    case "SHIPPED":
+      return "Shipped On";
+    case "OUTFORDELIVERY":
+      return "Out for Delivery On";
+    case "DELIVERED":
+      return "Delivered On";
+    case "CANCELLED":
+      return "Cancelled On";
+    case "RETURNED":
+      return "Returned On";
+    default:
+      return "Status Updated On";
+  }
+};
+
+const getDeliveryDate = () => {
+  const statusUpdated = new Date(currentOrder?.statusUpdatedAt);
+  return statusUpdated.toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+  });
+};
 
 
   return (
@@ -101,6 +142,33 @@ const activeStep = statusStepMap[status] ?? 0;
             <Grid container justifyContent="space-between" alignItems="center">
               <Grid item xs={12} md={9}>
                 <OrderTraker activeStep={activeStep} />
+                {shouldShowExpectedDate && (
+  <Box className="pt-2 text-sm text-gray-700">
+{shouldShowExpectedDate && (
+  <Box className="pt-2 text-sm">
+    {isOutForDelivery ? (
+      <Typography
+        sx={{
+          color: "#FB8C00", // orange color
+          fontWeight: 500,
+        }}
+      >
+       Your item's is Out for Delivery, It will be delivered today
+      </Typography>
+    ) : (
+      <Typography sx={{ color: "#FB8C00" /* text-gray-600 */, fontSize: "14px" }}>
+        Expected Delivery:{" "}
+        <span style={{ fontWeight: 600, color: "#000000" }}>
+          {formattedExpectedDate}
+        </span>
+      </Typography>
+    )}
+  </Box>
+)}
+
+  </Box>
+)}
+
               </Grid>
               <Grid item>
                 {status === "DELIVERED" && (
@@ -176,25 +244,40 @@ const activeStep = statusStepMap[status] ?? 0;
 
 
           {/* Order Status Chip */}
-          <Box className="pt-4 pb-10">
-<Chip
-  label={currentOrder?.orderStatus}
-  icon={getStatusIcon(status)}
-  color={
-    status === "DELIVERED"
-      ? "success"
-      : status === "CANCELLED"
-      ? "error"
-      : status === "RETURNED"
-      ? "warning"
-      : status === "OUTFORDELIVERY"
-      ? "warning"
-      : "primary"
-  }
-/>
+<Box className="pt-4 pb-10">
+  <Chip
+    label={currentOrder?.orderStatus}
+    icon={getStatusIcon(status)}
+    color={
+      status === "DELIVERED"
+        ? "success"
+        : status === "CANCELLED"
+        ? "error"
+        : status === "RETURNED"
+        ? "warning"
+        : status === "OUTFORDELIVERY"
+        ? "warning"
+        : "primary"
+    }
+  />
+  
+  {/* ✅ Status update text and date */}
+<Typography
+  sx={{
+    fontSize: "14px",
+    color: "#4B5563", // Tailwind's gray-700
+    marginTop: "8px",
+    marginLeft: "2px",
+  }}
+>
+  {getDeliveryText()}:{" "}
+  <span style={{ fontWeight: 500, color: "#000000" }}>
+    {getDeliveryDate()}
+  </span>
+</Typography>
 
+</Box>
 
-          </Box>
         </motion.div>
       )}
 
