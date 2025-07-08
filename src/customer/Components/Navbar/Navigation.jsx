@@ -560,7 +560,7 @@ export default function Navigation() {
       {/* User Info - Mobile */}
       {!open && (
         <div className="lg:hidden sticky top-0 z-50 bg-white shadow-sm">
-          <div className="flex justify-between items-center px-4 pt-2">
+          <div className="flex justify-between items-center px-4 py-2">
             {auth.user ? (
               <div className="flex items-center justify-between w-full">
                 <div className="flex items-center space-x-3">
