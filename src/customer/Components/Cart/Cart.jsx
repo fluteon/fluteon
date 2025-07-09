@@ -1,6 +1,6 @@
 
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import CartItem from "./CartItem";
 import { Backdrop, Button, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -11,22 +11,36 @@ import RequireLogin from "../RequireLogin";
 const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const jwt = localStorage.getItem("jwt");
-  const isLoggedIn = Boolean(jwt);
+//   const jwt = localStorage.getItem("jwt");
+//   const isLoggedIn = Boolean(jwt);
 
-  const { cart } = useSelector((store) => store);
+//   const { cart } = useSelector((store) => store);
+// useEffect(() => {
+//   if (isLoggedIn) {
+//     console.log("Getting cart for JWT:", jwt);
+//     dispatch(getCart(jwt));
+//   }
+// }, [dispatch, isLoggedIn, jwt]);
 
-  // 🛑 Show login UI if not logged in
+//   if (!isLoggedIn) return <RequireLogin message="Please log in to view your cart." />;
 
-  // ✅ Only fetch cart if logged in
+const [jwt, setJwt] = useState(null);
+const [isLoaded, setIsLoaded] = useState(false);
+const { cart } = useSelector((store) => store);
 useEffect(() => {
-  if (isLoggedIn) {
-    console.log("Getting cart for JWT:", jwt);
+  const token = localStorage.getItem("jwt");
+  setJwt(token);
+  setIsLoaded(true);
+}, []);
+
+useEffect(() => {
+  if (isLoaded && jwt) {
     dispatch(getCart(jwt));
   }
-}, [dispatch, isLoggedIn, jwt]);
+}, [dispatch, isLoaded, jwt]);
 
-  if (!isLoggedIn) return <RequireLogin message="Please log in to view your cart." />;
+if (isLoaded && !jwt) return <RequireLogin message="Please log in to view your cart." />;
+
 
   return (
     <div>
