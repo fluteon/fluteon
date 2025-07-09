@@ -31,8 +31,11 @@ const HomeProductCard = ({ product }) => {
         <p className="mt-1 text-sm text-gray-500 line-clamp-2">{product?.title}</p>
 
         <div className="mt-3 flex justify-between items-center">
+           <p className="line-through text-gray-400">
+            ₹{product?.price}
+          </p>
           <span className="text-lg font-bold text-indigo-600">
-            ₹{product?.discountedPrice || product?.price}
+            ₹{product?.discountedPrice }
           </span>
           {product?.discountPersent && (
             <span className="text-sm font-medium text-green-600">
