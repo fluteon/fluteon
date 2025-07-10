@@ -9,6 +9,12 @@ import {
   GET_ORDER_HISTORY_FAILURE,
   GET_ORDER_HISTORY_REQUEST,
   GET_ORDER_HISTORY_SUCCESS,
+  RETURN_ORDER_REQUEST,
+  RETURN_ORDER_SUCCESS,
+  RETURN_ORDER_FAILURE,
+  GET_RETURN_STATUS_REQUEST,
+  GET_RETURN_STATUS_SUCCESS,
+  GET_RETURN_STATUS_FAILURE,
 } from "./ActionType";
 import api, { API_BASE_URL } from "../../../config/api";
 
@@ -80,12 +86,6 @@ export const getOrderHistory = (reqData) => async (dispatch, getState) => {
   try {
     dispatch({ type: GET_ORDER_HISTORY_REQUEST });
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${reqData.jwt}`,
-      },
-    };
-
     const { data } = await api.get(`/api/orders/user`);
     console.log("order history -------- ", data);
     dispatch({
@@ -95,6 +95,53 @@ export const getOrderHistory = (reqData) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: GET_ORDER_HISTORY_FAILURE,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const returnOrder = (orderId, reason) => async (dispatch) => {
+  try {
+    dispatch({ type: RETURN_ORDER_REQUEST });
+    const { data } = await api.put(
+      `${API_BASE_URL}/api/orders/${orderId}/return`,
+      { reason },
+    );
+
+    dispatch({
+      type: RETURN_ORDER_SUCCESS,
+      payload: data,
+    });
+     dispatch(getOrderById(orderId));
+  } catch (error) {
+    dispatch({
+      type: RETURN_ORDER_FAILURE,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getReturnStatus = (orderId, jwt) => async (dispatch) => {
+  try {
+    dispatch({ type: GET_RETURN_STATUS_REQUEST })
+
+    const { data } = await api.get(
+      `${API_BASE_URL}/api/orders/${orderId}/return-status`,
+    );
+
+    dispatch({
+      type: GET_RETURN_STATUS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_RETURN_STATUS_FAILURE,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

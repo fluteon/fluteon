@@ -5,8 +5,12 @@ import "./HomeProductSection.css";
 import { Button } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useState } from "react";
+import { useMediaQuery } from "@mui/material";
+
 
 const HomeProductSection = ({ section, data = [] }) => {
+const isMobile = useMediaQuery("(max-width: 640px)");
+const arrowSize = isMobile ? 36 : 50;
 
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -21,6 +25,15 @@ const HomeProductSection = ({ section, data = [] }) => {
     1024: { items: 4 },
     1280: { items: 5 },
   };
+
+  const visibleItems = () => {
+  if (window.innerWidth >= 1280) return 5;
+  if (window.innerWidth >= 1024) return 4;
+  if (window.innerWidth >= 768) return 3;
+  if (window.innerWidth >= 480) return 2;
+  return 1;
+};
+
 
   const items = data?.slice(0, 10).map((item, i) => (
     <div key={i} className="px-2">
@@ -54,48 +67,51 @@ const HomeProductSection = ({ section, data = [] }) => {
           animationDuration={2000}
         />
 
-        {activeIndex < items.length - 5 && (
-          <Button
-            onClick={slideNext}
-            className="z-50"
-            sx={{
-              position: "absolute",
-              top: "50%",
-              right: "-1.5rem",
-              transform: "translateY(-70%)",
-              minWidth: "0",
-              borderRadius: "50%",
-              boxShadow: 5,
-              bgcolor: "white",
-              height: "50px",
-              width: "50px",
-            }}
-            aria-label="next"
-          >
-            <ArrowForwardIosIcon />
-          </Button>
-        )}
+{activeIndex < items.length - visibleItems() && (
+  <Button
+    onClick={slideNext}
+    sx={{
+      position: "absolute",
+      top: "50%",
+      right: "0.5rem",
+      transform: "translateY(-50%)",
+      minWidth: 0,
+      borderRadius: "50%",
+      boxShadow: 5,
+      bgcolor: "white",
+      height: `${arrowSize}px`,
+      width: `${arrowSize}px`,
+      zIndex: 50,
+    }}
+    aria-label="next"
+  >
+    <ArrowForwardIosIcon fontSize={isMobile ? "small" : "medium"} />
+  </Button>
+)}
 
-        {activeIndex > 0 && (
-          <Button
-            onClick={slidePrev}
-            className="z-50"
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "-1.5rem",
-              transform: "translateY(-50%) rotate(180deg)",
-              minWidth: "0",
-              borderRadius: "50%",
-              boxShadow: 5,
-              height: "50px",
-              width: "50px",
-            }}
-            aria-label="prev"
-          >
-            <ArrowForwardIosIcon />
-          </Button>
-        )}
+{activeIndex > 0 && (
+  <Button
+    onClick={slidePrev}
+    sx={{
+      position: "absolute",
+      top: "50%",
+      left: "0.5rem",
+      transform: "translateY(-50%) rotate(180deg)",
+      minWidth: 0,
+      borderRadius: "50%",
+      boxShadow: 5,
+      bgcolor: "white",
+      height: `${arrowSize}px`,
+      width: `${arrowSize}px`,
+      zIndex: 50,
+    }}
+    aria-label="prev"
+  >
+    <ArrowForwardIosIcon fontSize={isMobile ? "small" : "medium"} />
+  </Button>
+)}
+
+
       </div>
     </div>
   );

@@ -7,7 +7,7 @@ const PrivacyPolicy = () => {
       {/* Image first on mobile, left on desktop */}
       <div className="w-full lg:w-1/2 flex justify-center">
         <img
-          src="https://hub92prints.com/wp-content/uploads/2017/10/TermsAndConditions.jpg"
+          src="http://www.rotosolutions.co.za/Images/Policy.jpg"
           alt="Privacy Policy Illustration"
           className="w-full max-w-sm h-full object-contain rounded-xl shadow-lg"
         />

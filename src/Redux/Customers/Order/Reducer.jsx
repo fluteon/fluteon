@@ -8,6 +8,12 @@ import {
     GET_ORDER_HISTORY_REQUEST,
     GET_ORDER_HISTORY_SUCCESS,
     GET_ORDER_HISTORY_FAILURE,
+    RETURN_ORDER_REQUEST,
+    RETURN_ORDER_SUCCESS,
+    RETURN_ORDER_FAILURE,
+    GET_RETURN_STATUS_REQUEST,
+    GET_RETURN_STATUS_SUCCESS,
+    GET_RETURN_STATUS_FAILURE,
   } from './ActionType';
 
   const initialState={
@@ -15,6 +21,8 @@ import {
     order:null,
     error:null,
     loading:false,
+    returnLoading: false,
+    returnStatus:null
   }
   
   export const orderReducer = (state = initialState, action) => {
@@ -64,6 +72,26 @@ import {
               error: action.payload,
               orders: [],
             };
+       case RETURN_ORDER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        returnStatus: "success",
+      };
+
+    case GET_RETURN_STATUS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        returnStatus: action.payload,
+      };
+    case RETURN_ORDER_FAILURE:
+    case GET_RETURN_STATUS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
       default:
         return state;
     }

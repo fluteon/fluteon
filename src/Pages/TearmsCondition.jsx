@@ -16,7 +16,7 @@ const TearmsCondition = () => {
       {/* Text */}
       <div className="w-full lg:w-1/2 max-w-2xl">
         <h2 className="text-4xl font-bold text-gray-800 mb-4">
-          Terms & Conditions - <span className="text-pink-600">Fluteon</span>
+          Terms & Conditions - <span className="text-gray-700">Fluteon</span>
         </h2>
         <p className="text-gray-600 mb-4">
           Welcome to Fluteon! By accessing or using our website, you agree to be
@@ -42,23 +42,38 @@ const TearmsCondition = () => {
         </p>
 
         <h3 className="text-xl font-semibold text-gray-800 mt-6 mb-2">
-          3. Shipping & Returns
+          3. Shipping
         </h3>
         <p className="text-gray-600 mb-4">
-          We aim to deliver your order within the promised timeframe. Return
-          policies are applicable only within 7 days of delivery, provided the
-          product is unused and in original packaging.
+          We aim to process and dispatch your order as quickly as possible.
+          Delivery typically takes a minimum of <strong>2 days</strong> and a maximum of <strong>10 days</strong> depending on your location.
         </p>
 
         <h3 className="text-xl font-semibold text-gray-800 mt-6 mb-2">
-          4. Intellectual Property
+          4. Returns
+        </h3>
+        <p className="text-gray-600 mb-4">
+          Returns are accepted within <strong>7 days</strong> of delivery. The product must be unused,
+          in its original packaging, and accompanied by the receipt. Return shipping costs may apply.
+        </p>
+
+        <h3 className="text-xl font-semibold text-gray-800 mt-6 mb-2">
+          5. Refund & Cancellation
+        </h3>
+        <p className="text-gray-600 mb-4">
+          Approved refunds and cancellations are processed within <strong>7 to 10 business days</strong>.
+          The refund will be credited to the original payment method. Processing time may vary depending on your bank or payment provider.
+        </p>
+
+        <h3 className="text-xl font-semibold text-gray-800 mt-6 mb-2">
+          6. Intellectual Property
         </h3>
         <p className="text-gray-600 mb-4">
           All content on Fluteon, including images, logos, and designs, is the
           property of Fluteon and cannot be used without written permission.
         </p>
 
-        <p className="text-sm text-gray-500 mt-6">Last updated: June 2025</p>
+        <p className="text-sm text-gray-500 mt-6">Last updated: July 2025</p>
       </div>
     </div>
   );
