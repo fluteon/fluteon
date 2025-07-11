@@ -36,7 +36,7 @@ const arrowSize = isMobile ? 36 : 50;
 
 
   const items = data?.slice(0, 10).map((item, i) => (
-    <div key={i} className="px-[6px] mx-1">
+    <div key={i} className="px-[2px] mx-1">
       <HomeProductCard product={item} />
     </div>
   ));
