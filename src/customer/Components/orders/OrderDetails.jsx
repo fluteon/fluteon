@@ -156,7 +156,7 @@ console.log("Steps:", steps);
           <Box className="p-5 shadow-lg border rounded-md bg-white">
             <Grid container justifyContent="space-between" alignItems="center">
               <Grid item xs={12} md={9}>
-                <OrderTraker activeStep={activeStep} steps={steps} />
+<OrderTraker activeStep={activeStep} steps={steps || []} />
 
                 {shouldShowExpectedDate && (
                   <Box className="pt-2 text-sm text-gray-700">
