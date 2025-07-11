@@ -79,6 +79,7 @@ const returnLoading = order?.returnLoading;
   const currentOrder = order?.order;
   const status = currentOrder?.orderStatus?.toUpperCase().replace(/\s+/g, "") || "";
 
+  console.log("current order",currentOrder)
   const activeStep = statusStepMap[status] ?? 0;
 
 const baseSteps = ["Placed", "Confirmed", "Shipped", "Out For Delivery", "Delivered"];
@@ -132,8 +133,7 @@ if (isDelivered) {
       month: "short",
     });
   };
-console.log("Status:", status);
-console.log("Steps:", steps);
+
 
   return (
     <>
@@ -181,14 +181,17 @@ console.log("Steps:", steps);
                 {status === "DELIVERED" && !["RETURNED_REQUESTED", "RETURNED", "RETURN_REJECTED"].includes(status) && (
                   <>
                     <Button variant="text" color="error" onClick={() => setReturnOpen(true)}>RETURN</Button>
-                    <ReturnDialog
-                      open={returnOpen}
-                      onClose={() => setReturnOpen(false)}
-                      onConfirm={(reason) => {
-                        dispatch(returnOrder(orderId, reason));
-                        setReturnOpen(false);
-                      }}
-                    />
+<ReturnDialog
+  open={returnOpen}
+  onClose={() => setReturnOpen(false)}
+  onConfirm={(formData) => {
+    dispatch(returnOrder(orderId, formData)); // use as-is
+    setReturnOpen(false);
+  }}
+/>
+
+
+
                   </>
                 )}
 
@@ -285,16 +288,38 @@ console.log("Steps:", steps);
             </Typography>
 
             {/* Admin note if exists */}
-            {["RETURNED", "RETURN_REJECTED", "RETURN_APPROVED"].includes(status) && currentOrder?.adminNote && (
+            {/* {["RETURNED", "RETURN_REJECTED", "RETURN_APPROVED"].includes(status) && currentOrder?.adminNote && (
               <Box className="mt-3 p-3 rounded-md border bg-gray-50">
-                <Typography variant="subtitle2" sx={{ color: "#000", fontWeight: 500 }}>
+                <Typography variant="subtitle2" sx={{ color: "black", fontWeight: 500 }}>
                   Admin Message:
                 </Typography>
                 <Typography variant="body2" sx={{ color: "#4B5563" }}>
-                  {currentOrder.adminNote}
+                  {currentOrder.rejectionMessage}
                 </Typography>
               </Box>
-            )}
+            )} */}
+{["RETURNED", "RETURN_REJECTED", "RETURN_APPROVED"].includes(status) &&
+  ((status === "RETURN_REJECTED" && currentOrder?.rejectionMessage) ||
+    currentOrder?.adminNote || currentOrder?.returnTime) && (
+    <Box className="mt-3 p-3 rounded-md border bg-gray-50">
+      <Typography variant="subtitle2" sx={{ color: "black", fontWeight: 500 }}>
+        Admin Message:
+      </Typography>
+      <Typography variant="body2" sx={{ color: "#4B5563" }}>
+        {status === "RETURN_REJECTED"
+          ? currentOrder.rejectionMessage
+          : currentOrder.adminNote}
+      </Typography>
+
+      {status === "RETURNED" && currentOrder?.returnTime && (
+        <Typography variant="body2" sx={{ color: "#4B5563", mt: 1 }}>
+          <strong>Expected return processing time:</strong> {currentOrder.returnTime} day(s)
+        </Typography>
+      )}
+    </Box>
+)}
+
+
           </Box>
         </motion.div>
       )}

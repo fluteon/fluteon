@@ -103,29 +103,30 @@ export const getOrderHistory = (reqData) => async (dispatch, getState) => {
   }
 };
 
-export const returnOrder = (orderId, reason) => async (dispatch) => {
+
+export const returnOrder = (orderId, formData) => async (dispatch) => {
   try {
     dispatch({ type: RETURN_ORDER_REQUEST });
+
     const { data } = await api.put(
       `${API_BASE_URL}/api/orders/${orderId}/return`,
-      { reason },
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" }, // 👈 necessary!
+      }
     );
 
-    dispatch({
-      type: RETURN_ORDER_SUCCESS,
-      payload: data,
-    });
-     dispatch(getOrderById(orderId));
+    dispatch({ type: RETURN_ORDER_SUCCESS, payload: data });
+    dispatch(getOrderById(orderId));
   } catch (error) {
     dispatch({
       type: RETURN_ORDER_FAILURE,
       payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+        error.response?.data?.message || error.message,
     });
   }
 };
+
 
 export const getReturnStatus = (orderId, jwt) => async (dispatch) => {
   try {
