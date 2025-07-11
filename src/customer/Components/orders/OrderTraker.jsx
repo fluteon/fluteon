@@ -52,7 +52,7 @@ const CustomStepIcon = ({ icon, active, completed }) => {
   return <Box>{icons[icon]}</Box>;
 };
 
-export default function OrderTraker({ activeStep,steps }) {
+export default function OrderTraker({ activeStep, steps = [] }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
