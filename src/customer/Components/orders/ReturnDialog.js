@@ -27,18 +27,40 @@ const ReturnDialog = ({ open, onClose, onConfirm }) => {
   const [reason, setReason] = useState("");
   const [description, setDescription] = useState("");
   const [images, setImages] = useState([]);
+const [imagePreviews, setImagePreviews] = useState([]);
 
-  const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    const totalImages = [...images, ...files].slice(0, 4);
-    setImages(totalImages);
-  };
+const handleImageChange = (e) => {
+  const files = Array.from(e.target.files);
+  const totalFiles = [...images, ...files].slice(0, 4);
+  setImages(totalFiles);
 
-  const removeImage = (index) => {
-    const updated = [...images];
-    updated.splice(index, 1);
-    setImages(updated);
-  };
+  // Generate previews
+  const readers = totalFiles.map(file => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  });
+
+  Promise.all(readers).then((results) => {
+    setImagePreviews(results);
+  });
+
+  e.target.value = null; // Reset input
+};
+
+
+const removeImage = (index) => {
+  const updatedImages = [...images];
+  const updatedPreviews = [...imagePreviews];
+  updatedImages.splice(index, 1);
+  updatedPreviews.splice(index, 1);
+  setImages(updatedImages);
+  setImagePreviews(updatedPreviews);
+};
+
 
   const handleSubmit = () => {
     if (reason && description.trim() && images.length) {
@@ -135,40 +157,27 @@ const ReturnDialog = ({ open, onClose, onConfirm }) => {
 
           {/* Preview */}
           <Grid container spacing={1} mt={1}>
-            {images.map((img, index) => (
-              <Grid item key={index}>
-                <Box
-                  sx={{
-                    width: 80,
-                    height: 80,
-                    position: "relative",
-                    borderRadius: 2,
-                    overflow: "hidden",
-                    border: "1px solid #ddd",
-                  }}
-                >
-                  <img
-                    src={URL.createObjectURL(img)}
-                    alt={`upload-${index}`}
-                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                  />
-                  <Tooltip title="Remove">
-                    <IconButton
-                      size="small"
-                      sx={{
-                        position: "absolute",
-                        top: 0,
-                        right: 0,
-                        backgroundColor: "rgba(255,255,255,0.7)",
-                      }}
-                      onClick={() => removeImage(index)}
-                    >
-                      <DeleteIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
-                </Box>
-              </Grid>
-            ))}
+{imagePreviews.map((src, index) => (
+  <Grid item key={index}>
+    <Box sx={{ width: 80, height: 80, position: "relative", borderRadius: 2, overflow: "hidden", border: "1px solid #ddd" }}>
+      <img
+        src={src}
+        alt={`upload-${index}`}
+        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+      />
+      <Tooltip title="Remove">
+        <IconButton
+          size="small"
+          sx={{ position: "absolute", top: 0, right: 0, backgroundColor: "rgba(255,255,255,0.7)" }}
+          onClick={() => removeImage(index)}
+        >
+          <DeleteIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
+    </Box>
+  </Grid>
+))}
+
           </Grid>
         </Box>
       </DialogContent>
