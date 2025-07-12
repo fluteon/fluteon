@@ -30,6 +30,14 @@ export const navigation = {
             { name: 'Jeans', id: 'jeans', href: '{women/bottom_wear/jeans}' },
           ],
         },
+                {
+          id: 'blazer',
+          name: 'Blazers',
+          items: [
+            { name: 'Blazers', id: 'blazers', href: '{women/blazer/blazers}' },
+            { name: 'Blazer Sets', id: 'blazers_sets', href: '{women/blazer/blazers_sets}' },
+          ],
+        },
         {
           id: 'shirts',
           name: 'Shirts',

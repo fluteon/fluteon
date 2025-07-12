@@ -2,12 +2,14 @@
 
 
 export const homeCarouselData=[
-    {
-        image:"images/formalShirts.png",
-        path:"/women/clothing/lengha_choli"
+    {   
+        title:"Blazers",
+        image:"images/blazers.jpg",
+        path:"/women/blazer/blazers"
     },
     {
-        image:"images/formalPants.png",
+        title:"Pants",
+        image:"images/pants.jpg",
         path:"/women/bottom_wear/formal_pants"
     },
     {
