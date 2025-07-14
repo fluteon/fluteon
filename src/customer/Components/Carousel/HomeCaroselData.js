@@ -5,12 +5,12 @@ export const homeCarouselData=[
     {   
         title:"Blazers",
         image:"images/blazers.jpg",
-        path:"/women/blazer/blazers"
+        path:"/women/blazer"
     },
     {
         title:"Pants",
         image:"images/pants.jpg",
-        path:"/women/bottom_wear/formal_pants"
+        path:"/women/bottom_wear"
     },
     {
         image:"images/tankTop.png",
