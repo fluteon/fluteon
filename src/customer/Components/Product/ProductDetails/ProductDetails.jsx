@@ -10,6 +10,9 @@ import { findProductById } from "../../../../Redux/Customers/Product/Action";
 import { addItemToCart } from "../../../../Redux/Customers/Cart/Action";
 import { getAllReviews, getRatingSummary, } from "../../../../Redux/Customers/Review/Action";
 import { FormHelperText } from "@mui/material";
+import ShareIcon from '@mui/icons-material/Share';
+import { IconButton, Tooltip } from '@mui/material';
+
 
 
 const product = {
@@ -130,14 +133,62 @@ if (isLoading) {
 
 // console.log("reviews....:", review.reviews);
 // console.log("ratingSummaryData:", ratingSummaryData);
+const handleShare = async () => {
+  const shareData = {
+    title: customersProduct.product?.title || 'Product',
+    text: 'Check out this product on Fluteon!',
+    url: window.location.href,
+  };
+
+  try {
+    if (navigator.share) {
+      await navigator.share(shareData);
+    } else {
+      await navigator.clipboard.writeText(window.location.href);
+      alert("Product link copied to clipboard!");
+    }
+  } catch (error) {
+    console.error("Sharing failed", error);
+  }
+};
+
 
   return (
+    
 <div className="bg-white">
+  {/* Floating Share Button */}
+<Tooltip title="Share Product" arrow>
+  <IconButton
+    onClick={handleShare}
+    sx={{
+      position: 'fixed',
+      top: '50%',
+      right: '20px',
+      zIndex: 1000,
+      backgroundColor: '#fff',
+      boxShadow: 3,
+      border: '1px solid #ccc',
+      '&:hover': {
+        backgroundColor: '#f1f1f1',
+      },
+      display: {
+        xs: 'none', // ❌ hidden on mobile
+        sm: 'none', // ❌ hidden on small screens
+        md: 'flex', // ✅ visible on medium and up
+      },
+    }}
+  >
+    <ShareIcon color="action" />
+  </IconButton>
+</Tooltip>
+
+
+
   <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-10 ">
     {/* Product Details */}
     <section className="grid grid-cols-1 lg:grid-cols-2 gap-y-10 gap-x-10">
       {/* Image Gallery */}
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center relative">
         {/* Main Image */}
         <div className="overflow-hidden rounded-lg max-w-[30rem] max-h-[35rem]">
           <img
@@ -145,6 +196,26 @@ if (isLoading) {
             alt="Main product"
             className="w-full h-full object-cover object-center"
           />
+          <Tooltip title="Share Product" arrow>
+  <IconButton
+    onClick={handleShare}
+            sx={{
+              position: "absolute",
+              top: 10,
+              right: 10,
+              zIndex: 10,
+              backgroundColor: "white",
+              padding: "6px",
+              boxShadow: 1,
+              "&:hover": {
+                backgroundColor: "#f3f3f3",
+              },
+            }}
+  >
+    <ShareIcon fontSize="small" />
+  </IconButton>
+</Tooltip>
+
         </div>
 
         {/* Thumbnails */}

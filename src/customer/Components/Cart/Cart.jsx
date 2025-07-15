@@ -1,8 +1,11 @@
 
-
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import CartItem from "./CartItem";
-import { Backdrop, Button, CircularProgress } from "@mui/material";
+import {
+  Backdrop,
+  Button,
+  CircularProgress,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getCart } from "../../../Redux/Customers/Cart/Action";
@@ -11,64 +14,45 @@ import RequireLogin from "../RequireLogin";
 const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-//   const jwt = localStorage.getItem("jwt");
-//   const isLoggedIn = Boolean(jwt);
+  const { cart } = useSelector((store) => store);
+  const jwt = localStorage.getItem("jwt");
 
-//   const { cart } = useSelector((store) => store);
-// useEffect(() => {
-//   if (isLoggedIn) {
-//     console.log("Getting cart for JWT:", jwt);
-//     dispatch(getCart(jwt));
-//   }
-// }, [dispatch, isLoggedIn, jwt]);
+  useEffect(() => {
+    if (jwt) {
+      dispatch(getCart(jwt));
+    }
+  }, [dispatch, jwt]);
 
-//   if (!isLoggedIn) return <RequireLogin message="Please log in to view your cart." />;
+  // Show login message if user not authenticated
+  if (!jwt) return <RequireLogin message="Please log in to view your cart." />;
 
-const [jwt, setJwt] = useState(null);
-const [isLoaded, setIsLoaded] = useState(false);
-const { cart } = useSelector((store) => store);
-useEffect(() => {
-  const token = localStorage.getItem("jwt");
-  setJwt(token);
-  setIsLoaded(true);
-}, []);
-
-useEffect(() => {
-  if (isLoaded && jwt) {
-    dispatch(getCart(jwt));
+  // Show loading screen while cart is fetching
+  if (cart.loading) {
+    return (
+      <Backdrop
+        open
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    );
   }
-}, [dispatch, isLoaded, jwt]);
-
-if (isLoaded && !jwt) return <RequireLogin message="Please log in to view your cart." />;
-
 
   return (
     <div>
-      {cart.loading && (
-        <Backdrop
-          open
-          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
-      )}
-
       {cart.cartItems?.length > 0 ? (
         <div className="lg:grid grid-cols-3 lg:px-16 relative p-4">
           {/* Cart items */}
           <div className="lg:col-span-2 lg:px-5 bg-white space-y-3">
-{Array.isArray(cart.cartItems) &&
-  cart.cartItems.flat().map((item, i) =>
-    item ? (
-      <CartItem
-        item={item}
-        showButton={true}
-        key={item._id || item.productId || i}
-      />
-    ) : null
-  )}
-
-
+            {cart.cartItems.flat().map((item, i) =>
+              item ? (
+                <CartItem
+                  item={item}
+                  showButton={true}
+                  key={item._id || item.productId || i}
+                />
+              ) : null
+            )}
           </div>
 
           {/* Price summary */}
@@ -116,21 +100,19 @@ if (isLoaded && !jwt) return <RequireLogin message="Please log in to view your c
           </div>
         </div>
       ) : (
-        !cart.loading && (
-          <div className="flex flex-col justify-center items-center py-20">
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/2038/2038854.png"
-              alt="Empty Cart"
-              className="w-32 h-32 mb-6 opacity-70"
-            />
-            <p className="text-xl font-semibold text-gray-700 mb-4">
-              Your cart is empty
-            </p>
-            <Button onClick={() => navigate("/")} variant="contained" color="primary">
-              Continue Shopping
-            </Button>
-          </div>
-        )
+        <div className="flex flex-col justify-center items-center py-20">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/2038/2038854.png"
+            alt="Empty Cart"
+            className="w-32 h-32 mb-6 opacity-70"
+          />
+          <p className="text-xl font-semibold text-gray-700 mb-4">
+            Your cart is empty
+          </p>
+          <Button onClick={() => navigate("/")} variant="contained" color="primary">
+            Continue Shopping
+          </Button>
+        </div>
       )}
     </div>
   );

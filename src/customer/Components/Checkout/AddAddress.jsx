@@ -238,7 +238,7 @@ export default function AddDeliveryAddressForm({ handleNext, onOrderCreated }) {
   const [loadingStates, setLoadingStates] = useState(false);
   const [formData, setFormData] = useState({ state: "", zip: "", mobile: "" });
   const [phoneError, setPhoneError] = useState("");
-  const [states, setStates] = useState(["Uttar Pradesh", "Maharashtra", "Delhi", "Bihar"]);
+  const [states, setStates] = useState(["Maharashtra"]);
   const [showAllPlaces, setShowAllPlaces] = useState(false);
 
   const displayedPlaces = showAllPlaces ? postOffices : postOffices.slice(0, 5);
@@ -360,32 +360,72 @@ export default function AddDeliveryAddressForm({ handleNext, onOrderCreated }) {
     document.body.style.overflow = loadingZip ? "hidden" : "auto";
   }, [loadingZip]);
 
+
+
+useEffect(() => {
+  const fetchStates = async () => {
+    setLoadingStates(true);
+    try {
+      const res = await fetch("https://cdn-api.co-vin.in/api/v2/admin/location/states");
+      const data = await res.json();
+      if (data.states) {
+        const stateNames = data.states.map((s) => s.state_name);
+        setStates(stateNames);
+      }
+    } catch (err) {
+      console.error("Failed to fetch states", err);
+    } finally {
+      setLoadingStates(false);
+    }
+  };
+
+  fetchStates();
+}, []);
+
+
 return (
   <Grid container spacing={4}>
     {/* Saved Address Section */}
     <Grid item xs={12} lg={5}>
-      <Box className="border rounded-md shadow-md h-[30.5rem] overflow-y-scroll">
-        {auth.user?.addresses.map((item) => (
-          <div
-            key={item.id}
-            onClick={() => setSelectedAdress(item)}
-            className="p-5 py-7 border-b cursor-pointer"
+<Box className="border rounded-md shadow-md h-[30.5rem] overflow-y-scroll">
+  {auth.user?.addresses?.length > 0 ? (
+    auth.user.addresses.map((item) => (
+      <div
+        key={item.id}
+        onClick={() => setSelectedAdress(item)}
+        className="p-5 py-7 border-b cursor-pointer"
+      >
+        <AddressCard address={item} />
+        {selectedAddress?.id === item.id && (
+          <Button
+            sx={{ mt: 2 }}
+            size="large"
+            variant="contained"
+            color="primary"
+            onClick={() => handleCreateOrder(item)}
           >
-            <AddressCard address={item} />
-            {selectedAddress?.id === item.id && (
-              <Button
-                sx={{ mt: 2 }}
-                size="large"
-                variant="contained"
-                color="primary"
-                onClick={() => handleCreateOrder(item)}
-              >
-                {isPlacingOrder ? <CircularProgress size={24} color="inherit" /> : "Deliver Here"}
-              </Button>
-            )}
-          </div>
-        ))}
-      </Box>
+            {isPlacingOrder ? <CircularProgress size={24} color="inherit" /> : "Deliver Here"}
+          </Button>
+        )}
+      </div>
+    ))
+  ) : (
+    <div className="flex flex-col justify-center items-center h-full text-center p-6">
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/2620/2620983.png"
+        alt="No Address"
+        className="w-20 h-20 mb-4 opacity-60"
+      />
+      <p className="text-lg font-medium text-gray-700 mb-2">
+        No saved address found
+      </p>
+      <p className="text-sm text-gray-500 mb-3">
+        Please fill the form on the right side or go below to add a new delivery address.
+      </p>
+    </div>
+  )}
+</Box>
+
     </Grid>
 
     {/* Manual Address Form Section */}
