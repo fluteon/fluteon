@@ -13,6 +13,9 @@ import { FormHelperText } from "@mui/material";
 import ShareIcon from '@mui/icons-material/Share';
 import { IconButton, Tooltip } from '@mui/material';
 
+import { Helmet } from 'react-helmet';
+
+
 
 
 const product = {
@@ -62,6 +65,15 @@ const reviewsToShow = Array.isArray(review?.reviews?.reviews)
     ? review.reviews.reviews
     : review.reviews.reviews.slice(0, 5)
   : [];
+
+<Helmet>
+  <title>{product?.title} | Fluteon</title>
+  <meta property="og:title" content={product?.title} />
+  <meta property="og:description" content={`Buy ${product?.title} at Fluteon`} />
+  <meta property="og:image" content={product?.imageUrl?.[0]} />
+  <meta property="og:url" content={`https://www.fluteon.com/product/${product?._id}`} />
+  <meta property="og:type" content="product" />
+</Helmet>
 
 useEffect(() => {
   if (customersProduct?.product?.imageUrl?.length > 0) {
