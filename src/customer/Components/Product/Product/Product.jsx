@@ -149,7 +149,7 @@ export default function Product() {
   }, [customersProduct.loading]);
 
   return (
-    <div className="bg-white -z-20 ">
+    <div className="bg-white -z-20  ">
       <div>
         {/* Mobile filter dialog */}
         <Transition.Root show={mobileFiltersOpen} as={Fragment}>
@@ -463,13 +463,18 @@ export default function Product() {
                 </form>
 
                 {/* Product grid */}
-                <div className="lg:col-span-4 w-full ">
-                  <div className="flex flex-wrap justify-center bg-white border py-5 rounded-md ">
-                    {customersProduct?.products?.content?.map((item) => (
-                      <ProductCard product={item} />
-                    ))}
-                  </div>
-                </div>
+             <div className="lg:col-span-4 w-full">
+  <div className="flex flex-wrap justify-center bg-white border py-5 rounded-md">
+    {customersProduct?.products?.content?.map((item) => (
+      <div
+        key={item._id}
+        className="w-1/2 sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 p-1"
+      >
+        <ProductCard product={item} />
+      </div>
+    ))}
+  </div>
+</div>
               </div>
             </div>
           </section>
