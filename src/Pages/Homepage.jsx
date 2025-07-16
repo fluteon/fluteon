@@ -78,7 +78,7 @@ import { CircularProgress, Box } from "@mui/material";
 
 const categoriesToFetch = [
   { name: "formal_pants", label: "Formal Pants" },
-  { name: "blazers", label: "Blazers" },
+  { name: "blazer", label: "Blazers" },
   { name: "satin_shirts", label: "Satin Shirts" },
 ];
 
