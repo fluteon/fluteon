@@ -13,12 +13,14 @@ export const homeCarouselData=[
         path:"/women/bottom_wear"
     },
     {
-        image:"images/tankTop.png",
-        path:"/women/clothing/women_dress"
+        title:"Shirts",
+        image:"images/shirts.jpg",
+        path:"/women/shirts/formal_shirts"
     },
     {
-        image:"images/kurti.png",
-        path:"/women/clothing/women_saree"
+        title:"Skirts",
+        image:"images/skirt.jpg",
+        path:"/women/bottom_wear/skirts"
     },
         {
         image:"images/tops.png",

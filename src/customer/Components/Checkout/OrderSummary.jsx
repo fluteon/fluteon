@@ -17,8 +17,11 @@ import { applyCoupon } from "../../../Redux/Customers/Coupon/couponActions";
 import DiscountIcon from "@mui/icons-material/Discount";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 
 const OrderSummary = () => {
+  const [usedCoins, setUsedCoins] = useState(0);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -78,10 +81,11 @@ console.log("🧠 Entire Redux state:", useSelector(state => state));
 dispatch(applyCoupon(couponCode, user._id, order._id));
   };
 
+  
   const handleCreatePayment = () => {
-    const data = { orderId: order?._id, jwt };
+const data = { orderId: order?._id, jwt, usedSuperCoins: usedCoins };
     setIsLoadingPayment(true);
-    dispatch(createPayment(data)).finally(() => setIsLoadingPayment(false));
+dispatch(createPayment(data)).finally(() => setIsLoadingPayment(false));
   };
 
   // ⏳ Show loader if order is still loading
@@ -157,6 +161,63 @@ dispatch(applyCoupon(couponCode, user._id, order._id));
             {/* 💰 Price Details */}
             <p className="font-bold opacity-60 pb-4">PRICE DETAILS</p>
             <hr />
+            {/* 🪙 Super Coin Usage Section */}
+<div className="mb-6 border p-4 rounded-md bg-yellow-50 shadow">
+  <div className="flex items-center gap-2 mb-2">
+    <MonetizationOnIcon sx={{ color: "#f9a825" }} />
+    <p className="font-semibold text-gray-700">Super Coins</p>
+  </div>
+
+  <div className="flex items-center justify-between text-sm font-medium text-gray-800">
+    <div>
+      <span>Available:</span>{" "}
+<span className="text-green-600 font-semibold">
+  {user?.superCoins || 0}
+</span>
+{order?.earnedSuperCoins > 0 && (
+  <span className="text-sm text-blue-600 font-medium ml-2">
+    (+{order.earnedSuperCoins} earned from this order)
+  </span>
+)}
+    </div>
+    <div>
+      <span className="text-blue-600">₹1 = 1 Coin</span>
+    </div>
+  </div>
+
+  {/* Optional: input to use coins manually */}
+<div className="mt-3 flex gap-2">
+  <input
+    type="number"
+    placeholder="Use coins"
+    value={usedCoins}
+    onChange={(e) => {
+      const value = Math.min(Number(e.target.value), user?.superCoins || 0);
+      setUsedCoins(value >= 0 ? value : 0);
+    }}
+    className="border rounded-md px-3 py-1 w-full focus:outline-blue-500"
+  />
+  <Button
+    size="small"
+    variant="outlined"
+    onClick={() => {
+      // Optional logic if you want a manual apply button
+      if (usedCoins > (user?.superCoins || 0)) {
+        setUsedCoins(user?.superCoins || 0);
+      }
+    }}
+  >
+    Apply
+  </Button>
+</div>
+
+
+  {/* Info note */}
+  <p className="mt-2 text-xs text-gray-600 italic">
+    You’ll earn more Super Coins after this order!
+  </p>
+</div>
+
             <div className="space-y-3 font-semibold">
               <div className="flex justify-between pt-3 text-black">
                 <span>Price ({order?.totalItem} item)</span>
@@ -173,15 +234,17 @@ dispatch(applyCoupon(couponCode, user._id, order._id));
                 <span className="text-green-700">Free</span>
               </div>
               <hr />
-              <div className="flex justify-between font-bold text-lg">
-                <span>Total Amount</span>
-                <span className="text-green-700">
-                  ₹
-                  {order?.totalDiscountedPrice - discountAmount >= 0
-                    ? order?.totalDiscountedPrice - discountAmount
-                    : 0}
-                </span>
-              </div>
+     <div className="flex justify-between font-bold text-lg">
+  <span>Total Amount</span>
+  <span className="text-green-700">
+    ₹
+    {Math.max(
+      (order?.totalDiscountedPrice || 0) - discountAmount - usedCoins,
+      0
+    )}
+  </span>
+</div>
+
             </div>
 
             {/* 💳 Payment Button */}

@@ -18,8 +18,47 @@ import {
 } from "./ActionType";
 import api, { API_BASE_URL } from "../../../config/api";
 
+// export const createOrder = (reqData) => async (dispatch) => {
+//   console.log("req data ", reqData);
+//   try {
+//     dispatch({ type: CREATE_ORDER_REQUEST });
+
+//     const config = {
+//       headers: {
+//         "Content-Type": "application/json",
+//         Authorization: `Bearer ${reqData.jwt}`,
+//       },
+//     };
+
+//     const { data } = await api.post(
+//       `${API_BASE_URL}/api/orders/`,
+//       reqData.address,
+//       config
+//     );
+    
+//     if (data._id) {
+//       reqData.navigate({ search: `step=3&order_id=${data._id}` });
+//     }
+//     console.log("created order - ", data);
+//     dispatch({
+//       type: CREATE_ORDER_SUCCESS,
+//       payload: data,
+//     });
+//   } catch (error) {
+//     console.log("catch error : ", error);
+//     dispatch({
+//       type: CREATE_ORDER_FAILURE,
+//       payload:
+//         error.response && error.response.data.message
+//           ? error.response.data.message
+//           : error.message,
+//     });
+//   }
+// };
+
 export const createOrder = (reqData) => async (dispatch) => {
-  console.log("req data ", reqData);
+  console.log("createOrder reqData ➡️", reqData);
+
   try {
     dispatch({ type: CREATE_ORDER_REQUEST });
 
@@ -30,22 +69,31 @@ export const createOrder = (reqData) => async (dispatch) => {
       },
     };
 
+    // 🔥 Prepare payload including address & usedSuperCoins
+   const payload = {
+  shippingAddress: reqData.address,
+  usedSuperCoins: reqData.usedSuperCoins || 0,
+};
+
+
     const { data } = await api.post(
       `${API_BASE_URL}/api/orders/`,
-      reqData.address,
+      payload,
       config
     );
-    
+
+    // 🔀 Navigate to payment step if order created
     if (data._id) {
       reqData.navigate({ search: `step=3&order_id=${data._id}` });
     }
-    console.log("created order - ", data);
+
+    console.log("✅ Order Created:", data);
     dispatch({
       type: CREATE_ORDER_SUCCESS,
       payload: data,
     });
   } catch (error) {
-    console.log("catch error : ", error);
+    console.error("❌ Order Creation Error:", error);
     dispatch({
       type: CREATE_ORDER_FAILURE,
       payload:
@@ -55,6 +103,7 @@ export const createOrder = (reqData) => async (dispatch) => {
     });
   }
 };
+
 
 export const getOrderById = (orderId) => async (dispatch) => {
   console.log("get order req ", orderId);
