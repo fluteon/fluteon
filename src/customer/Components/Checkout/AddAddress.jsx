@@ -238,7 +238,44 @@ export default function AddDeliveryAddressForm({ handleNext, onOrderCreated }) {
   const [loadingStates, setLoadingStates] = useState(false);
   const [formData, setFormData] = useState({ state: "", zip: "", mobile: "" });
   const [phoneError, setPhoneError] = useState("");
-  const [states, setStates] = useState(["Maharashtra"]);
+const [states, setStates] = useState([
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chhattisgarh",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Manipur",
+  "Meghalaya",
+  "Mizoram",
+  "Nagaland",
+  "Odisha",
+  "Punjab",
+  "Rajasthan",
+  "Sikkim",
+  "Tamil Nadu",
+  "Telangana",
+  "Tripura",
+  "Uttar Pradesh",
+  "Uttarakhand",
+  "West Bengal",
+  "Andaman and Nicobar Islands",
+  "Chandigarh",
+  "Dadra and Nagar Haveli and Daman and Diu",
+  "Delhi",
+  "Jammu and Kashmir",
+  "Ladakh",
+  "Lakshadweep",
+  "Puducherry"
+]);
   const [showAllPlaces, setShowAllPlaces] = useState(false);
 
   const displayedPlaces = showAllPlaces ? postOffices : postOffices.slice(0, 5);
@@ -362,25 +399,25 @@ export default function AddDeliveryAddressForm({ handleNext, onOrderCreated }) {
 
 
 
-useEffect(() => {
-  const fetchStates = async () => {
-    setLoadingStates(true);
-    try {
-      const res = await fetch("https://cdn-api.co-vin.in/api/v2/admin/location/states");
-      const data = await res.json();
-      if (data.states) {
-        const stateNames = data.states.map((s) => s.state_name);
-        setStates(stateNames);
-      }
-    } catch (err) {
-      console.error("Failed to fetch states", err);
-    } finally {
-      setLoadingStates(false);
-    }
-  };
+// useEffect(() => {
+//   const fetchStates = async () => {
+//     setLoadingStates(true);
+//     try {
+//       const res = await fetch("https://cdn-api.co-vin.in/api/v2/admin/location/states");
+//       const data = await res.json();
+//       if (data.states) {
+//         const stateNames = data.states.map((s) => s.state_name);
+//         setStates(stateNames);
+//       }
+//     } catch (err) {
+//       console.error("Failed to fetch states", err);
+//     } finally {
+//       setLoadingStates(false);
+//     }
+//   };
 
-  fetchStates();
-}, []);
+//   fetchStates();
+// }, []);
 
 
 return (
