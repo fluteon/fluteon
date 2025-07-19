@@ -2,28 +2,29 @@
 
 
 export const homeCarouselData=[
-    {   
-        title:"Blazers",
-        image:"images/blazers.jpg",
-        path:"/women/blazer"
-    },
     {
-        title:"Pants",
+        title:"Bottom wear",
         image:"images/pants.jpg",
         path:"/women/bottom_wear"
     },
     {
         title:"Shirts",
         image:"images/shirts.jpg",
-        path:"/women/shirts/formal_shirts"
+        path:"/women/shirts"
+    },
+    {   
+        title:"Blazers",
+        image:"images/blazers.jpg",
+        path:"/women/blazer"
     },
     {
         title:"Skirts",
-        image:"images/skirt.jpg",
+        image:"images/skirts.jpg",
         path:"/women/bottom_wear/skirts"
     },
         {
-        image:"images/tops.png",
+        title:"Tops",
+        image:"images/tops.jpg",
         path:"/women/clothing/women_saree"
     }
 
