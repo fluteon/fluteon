@@ -435,7 +435,7 @@ export default function Product() {
                       )}
                     </Disclosure>
                   ))}
-                  {singleFilter.map((section) => (
+                                  {singleFilter.map((section) => (
                     <Disclosure
                       // defaultOpen={true}
                       as="div"

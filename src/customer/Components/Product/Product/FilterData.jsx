@@ -14,16 +14,15 @@ export const filters = [
     id: "color",
     name: "Color",
     options: [
-      { value: "white", label: "White" },
-      { value: "beige", label: "Beige" },
-      { value: "blue", label: "Blue" },
-      { value: "brown", label: "Brown" },
-      { value: "green", label: "Green" },
-      { value: "purple", label: "Purple" },
-      {value:"yellow",label:"Yellow"}
+      { value: "white", label: "White", colorCode: "#FFFFFF" },
+      { value: "black", label: "Black", colorCode: "#000000" },
+      { value: "blue", label: "Blue", colorCode: "#0000FF" },
+      { value: "brown", label: "Brown", colorCode: "#8B4513" },
+      { value: "green", label: "Green", colorCode: "#008000" },
+      { value: "purple", label: "Purple", colorCode: "#800080" },
+      { value: "yellow", label: "Yellow", colorCode: "#FFFF00" }
     ],
   },
-
   {
     id: "size",
     name: "Size",
@@ -33,7 +32,6 @@ export const filters = [
       { value: "L", label: "L" },
     ],
   },
-  
 ];
 
 export const singleFilter=[
