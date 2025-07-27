@@ -229,7 +229,7 @@ export default function Product() {
   <Disclosure
     as="div"
     key={section.id}
-    className="border-b border-gray-200 py-6"
+    className="border-b border-gray-200 px-4 py-6"
   >
     {({ open }) => (
       <>
