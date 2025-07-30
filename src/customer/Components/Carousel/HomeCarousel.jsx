@@ -94,7 +94,6 @@
 
 // export default HomeCarousel;
 
-
 import React, { useMemo } from "react";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
@@ -104,7 +103,7 @@ import { Button, useMediaQuery } from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useTheme } from "@mui/material/styles";
-import "./Carousel.css"; // 🔥 Contains custom CSS for spacing, etc.
+import "./Carousel.css";
 
 const HomeCarousel = () => {
   const navigate = useNavigate();
@@ -112,26 +111,31 @@ const HomeCarousel = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const arrowSize = isMobile ? 32 : 42;
 
-  // ⚡ Memoize items for performance
-  const items = useMemo(() => (
-    homeCarouselData.map((item) => (
-      <div
-        key={item.id}
-        onClick={() => navigate(item.path)}
-        className="carousel-item"
-      >
-        <div className="circle-wrapper">
-          <img
-            src={item.image}
-            alt={item.title}
-            loading="lazy"
-            className="circle-image"
-          />
+  const items = useMemo(
+    () =>
+      homeCarouselData.map((item, index) => (
+        <div
+          key={index}
+          onClick={() => navigate(item.path)}
+          className="carousel-item"
+          style={{ cursor: "pointer" }}
+        >
+          <div className="circle-wrapper">
+            <img
+              src={`/${item.image}`} // ✅ makes sure it's served from `/public/images/...`
+              alt={item.title}
+              loading="lazy"
+              width="100"
+              height="100"
+              decoding="async"
+              className="circle-image"
+            />
+          </div>
+          <span className="carousel-title">{item.title}</span>
         </div>
-        <span className="carousel-title">{item.title}</span>
-      </div>
-    ))
-  ), [navigate]);
+      )),
+    [navigate]
+  );
 
   return (
     <div className="carousel-container">
