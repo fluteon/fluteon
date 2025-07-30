@@ -7,16 +7,13 @@ import HomeProductCard from "../../Home/HomeProductCard";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { findProductById } from "../../../../Redux/Customers/Product/Action";
-import { addItemToCart } from "../../../../Redux/Customers/Cart/Action";
+import { addItemToCart, getCart } from "../../../../Redux/Customers/Cart/Action";
 import { getAllReviews, getRatingSummary, } from "../../../../Redux/Customers/Review/Action";
 import { FormHelperText } from "@mui/material";
 import ShareIcon from '@mui/icons-material/Share';
 import { IconButton, Tooltip } from '@mui/material';
 
 import { Helmet } from 'react-helmet';
-
-
-
 
 const product = {
   sizes: [
@@ -59,6 +56,8 @@ const ratingSummaryData = review?.reviews?.ratingSummary || {
   const [isLoading, setIsLoading] = useState(true);
   const [sizeError, setSizeError] = useState(false);
 const [showAll, setShowAll] = useState(false);
+const [isAdding, setIsAdding] = useState(false);
+
 const summary = review.ratingSummary || {};
 const reviewsToShow = Array.isArray(review?.reviews?.reviews)
   ? showAll
@@ -88,7 +87,22 @@ useEffect(() => {
   };
 
 
-const handleSubmit = (e) => {
+// const handleSubmit = (e) => {
+//   e.preventDefault();
+
+//   if (!selectedSize) {
+//     setSizeError(true);
+//     return;
+//   }
+
+//   setSizeError(false);
+//   const data = { productId, size: selectedSize.name };
+//   dispatch(addItemToCart({ data, jwt }));
+//   navigate("/cart");
+// };
+
+
+const handleSubmit = async (e) => {
   e.preventDefault();
 
   if (!selectedSize) {
@@ -97,9 +111,25 @@ const handleSubmit = (e) => {
   }
 
   setSizeError(false);
-  const data = { productId, size: selectedSize.name };
-  dispatch(addItemToCart({ data, jwt }));
-  navigate("/cart");
+  setIsAdding(true);
+
+  try {
+    await dispatch(
+      addItemToCart({
+        data: { productId, size: selectedSize.name },
+        jwt,
+      })
+    );
+
+    await dispatch(getCart(jwt)); // ✅ ensures cart data is updated
+
+    navigate("/cart"); // ✅ navigate only after cart is refreshed
+  } catch (error) {
+    console.error("Error adding to cart:", error);
+    // Optionally show toast or alert to user
+  } finally {
+    setIsAdding(false);
+  }
 };
 
 
@@ -359,14 +389,16 @@ const handleShare = async () => {
               </FormHelperText>
             )}
           </div>
-
           <Button
-            variant="contained"
-            type="submit"
-            sx={{ padding: ".8rem 2rem", marginTop: "2rem" }}
-          >
-            Add To Cart
-          </Button>
+  type="submit"
+  variant="contained"
+  color="primary"
+  sx={{ padding: ".8rem 2rem", marginTop: "2rem" }}
+  disabled={isAdding}
+>
+  {isAdding ? "Adding..." : "Add to Cart"}
+</Button>
+
         </form>
 
         {/* Product Description */}
