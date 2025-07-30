@@ -24,11 +24,17 @@ export const createPayment = (reqData) => async (dispatch) => {
       },
     };
 
+    // ✅ Include couponDiscount in payload
     const payload = {
       usedSuperCoins: reqData.usedSuperCoins || 0,
+      couponDiscount: reqData.couponDiscount || 0,
     };
 
-    const { data } = await axios.post(`${API_BASE_URL}/api/payments/${reqData.orderId}`, payload, config);
+    const { data } = await axios.post(
+      `${API_BASE_URL}/api/payments/${reqData.orderId}`,
+      payload,
+      config
+    );
 
     console.log("datta", data);
 
@@ -50,6 +56,7 @@ export const createPayment = (reqData) => async (dispatch) => {
     });
   }
 };
+
 
   
 

@@ -81,12 +81,18 @@ console.log("🧠 Entire Redux state:", useSelector(state => state));
 dispatch(applyCoupon(couponCode, user._id, order._id));
   };
 
-  
-  const handleCreatePayment = () => {
-const data = { orderId: order?._id, jwt, usedSuperCoins: usedCoins };
-    setIsLoadingPayment(true);
-dispatch(createPayment(data)).finally(() => setIsLoadingPayment(false));
+const handleCreatePayment = () => {
+  const data = {
+    orderId: order?._id,
+    jwt,
+    usedSuperCoins: usedCoins,
+    couponDiscount: discountAmount, // ✅ send this to backend
   };
+
+  setIsLoadingPayment(true);
+  dispatch(createPayment(data)).finally(() => setIsLoadingPayment(false));
+};
+
 
   // ⏳ Show loader if order is still loading
   if (
