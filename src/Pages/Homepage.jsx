@@ -75,10 +75,10 @@ const Homepage = () => {
 {JSON.stringify({
   "@context": "https://schema.org",
   "@type": "Store",
-  "@id": "https://fluteo.in/#organization",
+  "@id": "https://fluteon.in/#organization",
   "name": "Fluteo",
-  "url": "https://fluteo.in/",
-  "logo": "https://fluteo.in/logo192.png", // ✅ or replace with your uploaded logo URL
+  "url": "https://fluteon.in/",
+  "logo": "https://fluteon.in/logo192.png", // ✅ or replace with your uploaded logo URL
   "sameAs": [
     "https://www.instagram.com/fluteostore",
     "https://www.facebook.com/fluteostore"
