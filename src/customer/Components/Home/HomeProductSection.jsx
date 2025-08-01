@@ -4,7 +4,6 @@ import { Button, useMediaQuery } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import "./HomeProductSection.css";
 
-// 🔥 Lazy-load HomeProductCard
 const HomeProductCard = lazy(() => import("./HomeProductCard"));
 
 const HomeProductSection = ({ section, data = [] }) => {
@@ -46,16 +45,20 @@ const HomeProductSection = ({ section, data = [] }) => {
 
   if (!data || data.length === 0) {
     return (
-      <div className="px-4 sm:px-6 lg:px-8 py-5">
-        <h2 className="text-2xl font-extrabold text-gray-900 py-1">{section}</h2>
+      <section aria-label={`${section} section`} className="px-4 sm:px-6 lg:px-8 py-5">
+        <header>
+          <h2 className="text-2xl font-extrabold text-gray-900 py-1">{section}</h2>
+        </header>
         <p className="text-gray-500">No products available at this time.</p>
-      </div>
+      </section>
     );
   }
 
   return (
-    <div className="relative">
-      <h2 className="text-2xl font-extrabold text-gray-900 px-2 py-5">{section}</h2>
+    <section aria-label={`${section} section`} className="relative">
+      <header>
+        <h2 className="text-2xl font-extrabold text-gray-900 px-2 py-5">{section}</h2>
+      </header>
       <div className="relative">
         <AliceCarousel
           disableButtonsControls
@@ -66,10 +69,9 @@ const HomeProductSection = ({ section, data = [] }) => {
           responsive={responsive}
           onSlideChanged={syncActiveIndex}
           animationType="fadeout"
-          animationDuration={600} // ⏱️ Faster slide
+          animationDuration={600}
         />
 
-        {/* ➡ Next Button */}
         {activeIndex < items.length - visibleItems() && (
           <CarouselArrow
             onClick={slideNext}
@@ -79,7 +81,6 @@ const HomeProductSection = ({ section, data = [] }) => {
           />
         )}
 
-        {/* ⬅ Prev Button */}
         {activeIndex > 0 && (
           <CarouselArrow
             onClick={slidePrev}
@@ -89,11 +90,10 @@ const HomeProductSection = ({ section, data = [] }) => {
           />
         )}
       </div>
-    </div>
+    </section>
   );
 };
 
-// 📦 Arrow component reused
 const CarouselArrow = ({ onClick, position, isMobile, arrowSize }) => (
   <Button
     onClick={onClick}
@@ -113,7 +113,7 @@ const CarouselArrow = ({ onClick, position, isMobile, arrowSize }) => (
       width: `${arrowSize}px`,
       zIndex: 50,
     }}
-    aria-label={position}
+    aria-label={`${position === "left" ? "Previous" : "Next"} products`}
   >
     <ArrowForwardIosIcon fontSize={isMobile ? "small" : "medium"} />
   </Button>

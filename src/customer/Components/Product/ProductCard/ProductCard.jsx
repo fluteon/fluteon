@@ -36,7 +36,6 @@
 // };
 
 // export default ProductCard;
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IconButton, Tooltip } from "@mui/material";
@@ -105,7 +104,8 @@ const ProductCard = ({ product }) => {
           <img
             className="object-cover object-top w-full h-full transition-transform duration-500 ease-in-out hover:scale-110"
             src={imageUrl[currentImageIndex]}
-            alt={title || "Product Image"}
+            loading="lazy"
+            alt={`${brand || "Product"} - ${title || "Fluteon Item"}`}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400 text-sm">
@@ -119,10 +119,10 @@ const ProductCard = ({ product }) => {
           </span>
         )}
 
-        {/* Share Button (only on non-mobile OR above image in mobile) */}
         <Tooltip title="Share" arrow>
           <IconButton
             onClick={handleShare}
+            aria-label="Share product"
             sx={{
               position: "absolute",
               top: 8,
@@ -144,8 +144,18 @@ const ProductCard = ({ product }) => {
 
       <div className="p-4 w-full flex flex-col justify-between flex-grow">
         <div>
-          <h3 className="text-xl font-bold text-gray-800 mb-1 truncate">{brand || "Brand"}</h3>
-          <p className="text-sm text-gray-600 mb-2 line-clamp-2">{title || "Product Title"}</p>
+          <h3
+            className="text-xl font-bold text-gray-800 mb-1 truncate"
+            title={brand || "Brand"}
+          >
+            {brand || "Brand"}
+          </h3>
+          <p
+            className="text-sm text-gray-600 mb-2 line-clamp-2"
+            title={title || "Product Title"}
+          >
+            {title || "Product Title"}
+          </p>
           {color && <p className="text-xs text-gray-400">{color}</p>}
         </div>
 
