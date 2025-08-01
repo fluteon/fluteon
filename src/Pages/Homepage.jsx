@@ -61,6 +61,7 @@ const Homepage = () => {
     <div>
       {/* ✅ SEO Tags */}
 <Helmet>
+  {/* ✅ Basic SEO */}
   <title>Buy Cotton Pants, Blazers & Satin Shirts for Women | Fluteon</title>
   <meta
     name="description"
@@ -72,48 +73,47 @@ const Homepage = () => {
   />
   <link rel="canonical" href="https://fluteon.com/" />
 
-  {/* ✅ Open Graph Tags */}
-<Helmet>
+  {/* ✅ Open Graph Tags for Social Sharing */}
   <meta property="og:title" content="Fluteon - Premium Women's Fashion" />
-  <meta property="og:description" content="Shop premium cotton pants, blazers, and satin shirts for women at Fluteon. Exclusive styles, fast delivery across India." />
-  <meta property="og:image" content="https://fluteon.com/og-banner.png" />  {/* ✅ Upload your new banner here */}
+  <meta
+    property="og:description"
+    content="Shop premium cotton pants, blazers, and satin shirts for women at Fluteon. Exclusive styles, fast delivery across India."
+  />
+  <meta property="og:image" content="https://fluteon.com/og-banner.png" />
   <meta property="og:url" content="https://fluteon.com/" />
   <meta property="og:type" content="website" />
-</Helmet>
-
 
   {/* ✅ Structured Data (JSON-LD) */}
   <script type="application/ld+json">
-    {`
-      {
-        "@context": "https://schema.org",
-        "@type": "Store",
-        "@id": "https://fluteon.com/#organization",
-        "name": "Fluteon",
-        "url": "https://fluteon.com/",
-        "logo": "https://fluteon.com/logo192.png",
-        "sameAs": [
-          "https://www.instagram.com/fluteostore",
-          "https://www.facebook.com/fluteostore"
-        ],
-        "address": {
-          "@type": "PostalAddress",
-          "addressCountry": "IN"
-        },
-        "contactPoint": {
-          "@type": "ContactPoint",
-          "telephone": "+91-9876543210",
-          "contactType": "Customer Service"
-        },
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": "https://fluteon.com/search?query={search_term_string}",
-          "query-input": "required name=search_term_string"
-        }
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Store",
+      "@id": "https://fluteon.com/#organization",
+      "name": "Fluteon",
+      "url": "https://fluteon.com/",
+      "logo": "https://fluteon.com/logo192.png",
+      "sameAs": [
+        "https://www.instagram.com/fluteostore",
+        "https://www.facebook.com/fluteostore"
+      ],
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "IN"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+91-9876543210",
+        "contactType": "Customer Service"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://fluteon.com/search?query={search_term_string}",
+        "query-input": "required name=search_term_string"
       }
-    `}
+    })}
   </script>
 </Helmet>
+
 
 
       {/* ✅ Homepage UI */}
