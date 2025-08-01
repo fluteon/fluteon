@@ -1,3 +1,4 @@
-# https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Disallow: /product-category/
+
+Sitemap: https://www.fluteon.com/sitemap.xml
