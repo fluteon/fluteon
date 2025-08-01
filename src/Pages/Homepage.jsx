@@ -113,9 +113,6 @@ const Homepage = () => {
     })}
   </script>
 </Helmet>
-
-
-
       {/* ✅ Homepage UI */}
       <HomeCarousel images={homeCarouselData} />
       <div className="space-y-10">

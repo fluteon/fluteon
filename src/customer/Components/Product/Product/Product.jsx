@@ -14,7 +14,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import Pagination from "@mui/material/Pagination";
-
+import { Helmet } from "react-helmet-async";
 import { filters, singleFilter, sortOptions } from "./FilterData";
 import ProductCard from "../ProductCard/ProductCard";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -177,6 +177,70 @@ export default function Product() {
   }, [customersProduct.loading]);
 
   return (
+<>
+<Helmet>
+  <title>{`Buy ${param.lavelThree?.replace(/_/g, " ") || param.lavelTwo} | Fluteon`}</title>
+  <meta
+    name="description"
+    content={`Explore premium ${param.lavelThree || param.lavelTwo} for women. Shop online at Fluteon – affordable, elegant, and fast delivery!`}
+  />
+  <meta
+    name="keywords"
+    content={`women ${param.lavelThree || param.lavelTwo}, fluteon pants, formal fashion, satin shirts, blazers`}
+  />
+  <link
+    rel="canonical"
+    href={`https://www.fluteon.com/${param.lavelTwo}${param.lavelThree ? `/${param.lavelThree}` : ""}`}
+  />
+
+  {/* Open Graph Tags */}
+  <meta property="og:title" content={`Fluteon - ${param.lavelThree || param.lavelTwo}`} />
+  <meta
+    property="og:description"
+    content={`Discover stylish ${param.lavelThree || param.lavelTwo} for women at Fluteon.`}
+  />
+  <meta property="og:image" content="https://www.fluteon.com/og-banner.png" />
+  <meta
+    property="og:url"
+    content={`https://www.fluteon.com/${param.lavelTwo}${param.lavelThree ? `/${param.lavelThree}` : ""}`}
+  />
+  <meta property="og:type" content="website" />
+
+  {/* Structured Data - Breadcrumb */}
+  <script type="application/ld+json">
+    {`
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.fluteon.com"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "${param.lavelTwo}",
+            "item": "https://www.fluteon.com/${param.lavelTwo}"
+          }
+          ${param.lavelThree
+            ? `,
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "${param.lavelThree}",
+            "item": "https://www.fluteon.com/${param.lavelTwo}/${param.lavelThree}"
+          }`
+            : ""}
+        ]
+      }
+    `}
+  </script>
+</Helmet>
+
+
     <div className="bg-white -z-20 ">
       <div>
         {/* Mobile filter dialog */}
@@ -530,5 +594,6 @@ export default function Product() {
         </section>
       </div>
     </div>
+</>
   );
 }
