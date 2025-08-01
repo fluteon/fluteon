@@ -1,4 +1,4 @@
-User-agent: *
-Disallow: /product-category/
+User-agent: * 
+Allow: /
 
 Sitemap: https://www.fluteon.com/sitemap.xml
