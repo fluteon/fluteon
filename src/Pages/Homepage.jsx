@@ -71,24 +71,36 @@ const Homepage = () => {
           content="women cotton pants, satin shirts, blazers for girls, affordable women wear, online kurtis, office wear women"
         />
         <link rel="canonical" href="https://yourdomain.com/" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Store",
-            "name": "Fluteo",
-            "url": "https://yourdomain.com/",
-            "logo": "https://yourdomain.com/logo.png",
-            "sameAs": [
-              "https://www.instagram.com/fluteostore",
-              "https://www.facebook.com/fluteostore"
-            ],
-            "potentialAction": {
-              "@type": "SearchAction",
-              "target": "https://yourdomain.com/search?query={search_term_string}",
-              "query-input": "required name=search_term_string"
-            }
-          })}
-        </script>
+<script type="application/ld+json">
+{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Store",
+  "@id": "https://fluteo.in/#organization",
+  "name": "Fluteo",
+  "url": "https://fluteo.in/",
+  "logo": "https://fluteo.in/logo192.png", // ✅ or replace with your uploaded logo URL
+  "sameAs": [
+    "https://www.instagram.com/fluteostore",
+    "https://www.facebook.com/fluteostore"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "IN"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+91-9876543210",
+    "contactType": "Customer Service"
+  },
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://fluteo.in/search?query={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+})}
+</script>
+
+
       </Helmet>
 
       {/* ✅ Homepage UI */}
