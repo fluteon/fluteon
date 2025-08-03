@@ -2,6 +2,7 @@ import React, { useState, lazy, Suspense } from "react";
 import AliceCarousel from "react-alice-carousel";
 import { Button, useMediaQuery } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { Helmet } from "react-helmet-async";
 import "./HomeProductSection.css";
 
 const HomeProductCard = lazy(() => import("./HomeProductCard"));
@@ -46,6 +47,10 @@ const HomeProductSection = ({ section, data = [] }) => {
   if (!data || data.length === 0) {
     return (
       <section aria-label={`${section} section`} className="px-4 sm:px-6 lg:px-8 py-5">
+        <Helmet>
+          <title>{section} - Shop Trending Styles</title>
+          <meta name="description" content={`Browse top-selling ${section} at affordable prices.`} />
+        </Helmet>
         <header>
           <h2 className="text-2xl font-extrabold text-gray-900 py-1">{section}</h2>
         </header>
@@ -55,10 +60,27 @@ const HomeProductSection = ({ section, data = [] }) => {
   }
 
   return (
-    <section aria-label={`${section} section`} className="relative">
-      <header>
-        <h2 className="text-2xl font-extrabold text-gray-900 px-2 py-5">{section}</h2>
+    <section aria-label={`${section} section`} className="relative px-4 sm:px-6 lg:px-8">
+      <Helmet>
+        <title>{section} | Fluteon Fashion</title>
+        <meta name="description" content={`Explore our curated ${section} collection at Fluteon.`} />
+        <meta property="og:title" content={section} />
+        <meta property="og:description" content={`Shop stylish and trending ${section} for women.`} />
+      </Helmet>
+
+      <header className="flex items-center justify-between mb-2">
+        <h2 className="text-3xl font-bold text-gray-800  pb-1 inline-block">
+          {section}
+        </h2>
+        <a
+          href={`/shop/${section.toLowerCase().replace(/\s+/g, "_")}`}
+          className="text-blue-600 hover:underline flex items-center text-sm font-medium"
+        >
+          View more
+          <ArrowForwardIosIcon fontSize="small" className="ml-1" />
+        </a>
       </header>
+
       <div className="relative">
         <AliceCarousel
           disableButtonsControls

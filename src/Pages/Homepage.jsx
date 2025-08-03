@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { fetchHomepageCategoryProducts } from "../Redux/Customers/Product/Action";
 import { CircularProgress, Box } from "@mui/material";
-import { Helmet } from "react-helmet-async"; // ✅ SEO Helmet
-
+import { Helmet } from "react-helmet-async";
 import HomeCarousel from "../customer/Components/Carousel/HomeCarousel";
 import HomeProductSection from "../customer/Components/Home/HomeProductSection";
 import { homeCarouselData } from "../customer/Components/Carousel/HomeCaroselData";
+import FluteonLoader from "./FluteonLoader";
 
 const categoriesToFetch = [
   { name: "formal_pants", label: "Formal Pants" },
@@ -18,72 +18,79 @@ const Homepage = () => {
   const dispatch = useDispatch();
   const [categoryData, setCategoryData] = useState({});
   const [loading, setLoading] = useState(true);
+  const [showIntroLoader, setShowIntroLoader] = useState(true); // loader state
 
   useEffect(() => {
-    const fetchCategoryData = async () => {
-      try {
-        const promises = categoriesToFetch.map((category) =>
-          dispatch(
-            fetchHomepageCategoryProducts({
-              category: category.name,
-              pageNumber: 1,
-              pageSize: 10,
-            })
-          )
-        );
+    // 1. Show logo loader for 2 seconds
+    const introTimer = setTimeout(() => {
+      setShowIntroLoader(false); // hide loader after 2s
+      fetchData(); // fetch data after loader ends
+    }, 2000);
 
-        const results = await Promise.all(promises);
-        const allCategoryData = {};
-        categoriesToFetch.forEach((category, i) => {
-          allCategoryData[category.name] = results[i]?.content || [];
-        });
+    return () => clearTimeout(introTimer);
+  }, []);
 
-        setCategoryData(allCategoryData);
-      } catch (error) {
-        console.error("Error loading homepage data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+ const [dataReady, setDataReady] = useState(false);
 
-    fetchCategoryData();
-  }, [dispatch]);
+useEffect(() => {
+  const introTimer = setTimeout(() => setShowIntroLoader(false), 2000);
+  fetchData();
+  return () => clearTimeout(introTimer);
+}, []);
 
-  if (loading) {
-    return (
-      <Box className="h-screen flex justify-center items-center">
-        <CircularProgress />
-      </Box>
+const fetchData = async () => {
+  try {
+    const promises = categoriesToFetch.map((category) =>
+      dispatch(fetchHomepageCategoryProducts({
+        category: category.name,
+        pageNumber: 1,
+        pageSize: 10,
+      }))
     );
-  }
 
+    const results = await Promise.all(promises);
+    const allCategoryData = {};
+    categoriesToFetch.forEach((category, i) => {
+      allCategoryData[category.name] = results[i]?.content || [];
+    });
+
+    setCategoryData(allCategoryData);
+    setLoading(false);
+    setDataReady(true); // ✅ data fetched
+  } catch (error) {
+    console.error("Error loading homepage data:", error);
+  }
+};
+
+// ✅ Final render
+if (showIntroLoader || !dataReady) {
+  return <FluteonLoader />;
+}
   return (
     <div>
-      {/* ✅ SEO Tags */}
-<Helmet>
-  {/* ✅ Basic SEO */}
-  <title>Buy Cotton Pants, Blazers & Satin Shirts for Women | Fluteon</title>
+    <Helmet>
+  <title>Fluteon | Premium Women's Fashion</title>
   <meta
     name="description"
-    content="Shop affordable formal pants, blazers, and satin shirts for women online at Fluteon. Premium quality, latest designs, and fast shipping across India."
+    content="Fluteon brings you premium-quality formal wear for women – discover curated pants, satin shirts, and blazers designed for modern Indian women. Shop now!"
   />
   <meta
     name="keywords"
-    content="women cotton pants, satin shirts, blazers for girls, affordable women wear, online kurtis, office wear women"
+    content="Fluteon, women's fashion India, formal wear women, satin shirts, blazers, office wear, trendy pants, modern Indian fashion"
   />
   <link rel="canonical" href="https://fluteon.com/" />
 
-  {/* ✅ Open Graph Tags for Social Sharing */}
-  <meta property="og:title" content="Fluteon - Premium Women's Fashion" />
+  {/* Open Graph (for WhatsApp, FB, etc.) */}
+  <meta property="og:title" content="Fluteon | Premium Women's Fashion" />
   <meta
     property="og:description"
-    content="Shop premium cotton pants, blazers, and satin shirts for women at Fluteon. Exclusive styles, fast delivery across India."
+    content="Explore handpicked fashion pieces for modern women – only at Fluteon. Free shipping across India."
   />
-  <meta property="og:image" content="https://fluteon.com/og-banner.png" />
+  <meta property="og:image" content="https://fluteon.com/assets/images/fluteon-logo.png" />
   <meta property="og:url" content="https://fluteon.com/" />
   <meta property="og:type" content="website" />
 
-  {/* ✅ Structured Data (JSON-LD) */}
+  {/* Structured Data (JSON-LD) */}
   <script type="application/ld+json">
     {JSON.stringify({
       "@context": "https://schema.org",
@@ -91,7 +98,7 @@ const Homepage = () => {
       "@id": "https://fluteon.com/#organization",
       "name": "Fluteon",
       "url": "https://fluteon.com/",
-      "logo": "https://fluteon.com/logo192.png",
+      "logo": "https://fluteon.com/assets/images/fluteon-logo.png",
       "sameAs": [
         "https://www.instagram.com/fluteostore",
         "https://www.facebook.com/fluteostore"
@@ -113,7 +120,8 @@ const Homepage = () => {
     })}
   </script>
 </Helmet>
-      {/* ✅ Homepage UI */}
+
+
       <HomeCarousel images={homeCarouselData} />
       <div className="space-y-10">
         {categoriesToFetch.map((cat) => (
