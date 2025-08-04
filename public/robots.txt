@@ -1,4 +1,7 @@
 User-agent: *
+Disallow: /*?add-to-cart=
+Disallow: /*?ref=
+Disallow: /*?utm_
 Allow: /
 
 Sitemap: https://www.fluteon.com/sitemap.xml

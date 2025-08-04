@@ -63,6 +63,7 @@ const HomeProductSection = ({ section, data = [] }) => {
     <section aria-label={`${section} section`} className="relative px-4 sm:px-6 lg:px-8">
       <Helmet>
         <title>{section} | Fluteon Fashion</title>
+        <link rel="canonical" href="https://www.fluteon.com/" />
         <meta name="description" content={`Explore our curated ${section} collection at Fluteon.`} />
         <meta property="og:title" content={section} />
         <meta property="og:description" content={`Shop stylish and trending ${section} for women.`} />

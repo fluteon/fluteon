@@ -71,6 +71,10 @@ const reviewsToShow = Array.isArray(review?.reviews?.reviews)
 
 <Helmet>
   <title>{product?.title} | Fluteon</title>
+    <link
+    rel="canonical"
+    href={`https://www.fluteon.com/product/${product?._id}`}
+  />
   <meta property="og:title" content={product?.title} />
   <meta property="og:description" content={`Buy ${product?.title} at Fluteon`} />
   <meta property="og:image" content={product?.imageUrl?.[0]} />
