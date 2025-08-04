@@ -16,7 +16,7 @@
   "rewrites": [
     {
       "source": "/sitemap.xml",
-      "destination": "https://useful-ainslee-fluteon-b2e61208.koyeb.app/sitemap.xml"
+      "destination": "https://backend-019n.onrender.com/sitemap.xml"
     }
   ]
 }
