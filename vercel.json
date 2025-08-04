@@ -2,13 +2,34 @@
   "redirects": [
     {
       "source": "/(.*)",
-      "has": [{ "type": "host", "value": "fluteon.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "fluteon.com"
+        }
+      ],
       "destination": "https://www.fluteon.com/$1",
       "permanent": true
     },
     {
       "source": "/(.*)",
-      "has": [{ "type": "host", "value": "http://www.fluteon.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "http://fluteon.com"
+        }
+      ],
+      "destination": "https://www.fluteon.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "http://www.fluteon.com"
+        }
+      ],
       "destination": "https://www.fluteon.com/$1",
       "permanent": true
     }
