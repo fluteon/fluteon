@@ -12,11 +12,6 @@ import CartItem from "../Cart/CartItem";
 import AddressCard from "../adreess/AdreessCard";
 import { getOrderById } from "../../../Redux/Customers/Order/Action";
 import { createPayment } from "../../../Redux/Customers/Payment/Action";
-import { applyCoupon } from "../../../Redux/Customers/Coupon/couponActions";
-
-import DiscountIcon from "@mui/icons-material/Discount";
-import VerifiedIcon from "@mui/icons-material/Verified";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 
 const OrderSummary = () => {
@@ -28,22 +23,17 @@ const OrderSummary = () => {
   const searchParams = new URLSearchParams(location.search);
   const orderId = searchParams.get("order_id");
   const jwt = localStorage.getItem("jwt");
-
-  const [couponCode, setCouponCode] = useState("");
-  const [couponStatus, setCouponStatus] = useState(null); // null | "valid" | "invalid"
-  const [couponDiscount, setCouponDiscount] = useState(0);
   const [isLoadingPayment, setIsLoadingPayment] = useState(false);
   const [isLoadingOrder, setIsLoadingOrder] = useState(true);
-
   const { user } = useSelector((state) => state.auth);
-  const { discountAmount, error, message } = useSelector((state) => state.coupon);
 const { order: orderState } = useSelector((state) => state);
 const order = orderState.order;
-console.log("🧾 Final Order from Redux:", order);
 
-
-console.log("🌐 orderId from URL:", orderId);
-console.log("🧠 Entire Redux state:", useSelector(state => state));
+useEffect(() => {
+  if (order) {
+    console.log("🧾 Order Object:", order);
+  }
+}, [order]);
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -60,41 +50,17 @@ console.log("🧠 Entire Redux state:", useSelector(state => state));
     if (orderId) fetchOrder();
   }, [dispatch, orderId]);
 
-  const handleApplyCoupon = () => {
-    if (!couponCode) {
-      setCouponStatus("invalid");
-      return;
-    }
-
-    if (!user || !user._id) {
-      setCouponStatus("invalid");
-      return;
-    }
-
-    if (!order || !order._id) {
-      setCouponStatus("invalid");
-      console.warn("⚠️ Order is not loaded yet!");
-      return;
-    }
-
-    console.log("✅ Applying coupon to Order ID:", order._id);
-dispatch(applyCoupon(couponCode, user._id, order._id));
-  };
-
 const handleCreatePayment = () => {
   const data = {
     orderId: order?._id,
     jwt,
     usedSuperCoins: usedCoins,
-    couponDiscount: discountAmount, // ✅ send this to backend
   };
 
   setIsLoadingPayment(true);
   dispatch(createPayment(data)).finally(() => setIsLoadingPayment(false));
 };
 
-
-  // ⏳ Show loader if order is still loading
   if (
     isLoadingOrder ||
     !order ||
@@ -129,40 +95,6 @@ const handleCreatePayment = () => {
         {/* Right Side: Coupon + Price Summary */}
         <div className="sticky top-0 mt-5 lg:mt-0 lg:ml-5">
           <div className="border p-5 bg-white shadow-lg rounded-md">
-
-            {/* 🧾 Coupon Code Section */}
-            <div className="mb-6 border p-4 rounded-md bg-gray-50 shadow">
-              <div className="flex items-center gap-2 mb-2">
-                <DiscountIcon sx={{ color: "#1976d2" }} />
-                <p className="font-semibold text-gray-700">Apply Coupon Code</p>
-              </div>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  placeholder="Enter coupon (e.g. FLUTEON100)"
-                  value={couponCode}
-                  onChange={(e) => setCouponCode(e.target.value)}
-                  className="border rounded-md px-3 py-2 w-full focus:outline-blue-500"
-                />
-                <Button variant="outlined" onClick={handleApplyCoupon}>
-                  Apply
-                </Button>
-              </div>
-
-              {/* Coupon Response */}
-              {message && (
-                <p className="flex items-center gap-2 text-green-600 mt-2 text-sm font-medium">
-                  <VerifiedIcon fontSize="small" />
-                  {message} (-₹{discountAmount})
-                </p>
-              )}
-              {error && (
-                <p className="flex items-center gap-2 text-red-600 mt-2 text-sm font-medium">
-                  <ErrorOutlineIcon fontSize="small" />
-                  {error}
-                </p>
-              )}
-            </div>
 
             {/* 💰 Price Details */}
             <p className="font-bold opacity-60 pb-4">PRICE DETAILS</p>
@@ -239,17 +171,21 @@ const handleCreatePayment = () => {
                 <span>Delivery Charges</span>
                 <span className="text-green-700">Free</span>
               </div>
-              <hr />
-     <div className="flex justify-between font-bold text-lg">
-  <span>Total Amount</span>
+              <div className="flex justify-between">
+  <span>Coupon Applied</span>
   <span className="text-green-700">
-    ₹
-    {Math.max(
-      (order?.totalDiscountedPrice || 0) - discountAmount - usedCoins,
-      0
-    )}
+    -₹{order?.couponDiscount || 0}
   </span>
 </div>
+
+              <hr />
+<div className="flex justify-between font-bold text-lg">
+  <span>Total Amount</span>
+  <span className="text-green-700">
+    ₹{Math.max((order?.totalDiscountedPrice || 0) - usedCoins, 0)}
+  </span>
+</div>
+
 
             </div>
 

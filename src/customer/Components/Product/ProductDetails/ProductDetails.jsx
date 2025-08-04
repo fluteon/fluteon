@@ -12,7 +12,9 @@ import { getAllReviews, getRatingSummary, } from "../../../../Redux/Customers/Re
 import { FormHelperText } from "@mui/material";
 import ShareIcon from '@mui/icons-material/Share';
 import { IconButton, Tooltip } from '@mui/material';
-
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import { jwtDecode } from "jwt-decode";
 import { Helmet } from 'react-helmet';
 
 const product = {
@@ -32,6 +34,8 @@ function classNames(...classes) {
 }
 
 export default function ProductDetails() {
+  const [loginAlert, setLoginAlert] = useState(false);
+
   const [sizeChart, setSizeChart] = useState([]);
 
   const baseUrl = process.env.REACT_APP_API_BASE_URL
@@ -101,14 +105,32 @@ useEffect(() => {
 //   navigate("/cart");
 // };
 
-
+const isJwtExpired = (token) => {
+  try {
+    const decoded = jwtDecode(token);
+    const currentTime = Date.now() / 1000; // in seconds
+    return decoded.exp < currentTime;
+  } catch (e) {
+    return true; // treat invalid token as expired
+  }
+};
 const handleSubmit = async (e) => {
   e.preventDefault();
+console.log("JWT:", jwt);
 
-  if (!selectedSize) {
-    setSizeError(true);
-    return;
-  }
+if (!jwt || jwt === "undefined") {
+  console.log("JWT:", jwt);
+
+  setLoginAlert(true);
+  return;
+}
+
+
+if (!jwt || jwt === "undefined" || isJwtExpired(jwt)) {
+  setLoginAlert(true);
+  return;
+}
+
 
   setSizeError(false);
   setIsAdding(true);
@@ -121,16 +143,23 @@ const handleSubmit = async (e) => {
       })
     );
 
-    await dispatch(getCart(jwt)); // ✅ ensures cart data is updated
+    await dispatch(getCart(jwt));
+    navigate("/cart");
+  }catch (error) {
+  console.error("Error adding to cart:", error);
 
-    navigate("/cart"); // ✅ navigate only after cart is refreshed
-  } catch (error) {
-    console.error("Error adding to cart:", error);
-    // Optionally show toast or alert to user
+  if (error.response?.data?.error === "jwt expired") {
+    setLoginAlert(true);
+  } else {
+    // Optionally show a generic error toast
+  }
+
+
   } finally {
     setIsAdding(false);
   }
 };
+
 
 
   useEffect(() => {
@@ -507,17 +536,33 @@ return (
     })}
   </>
 )}
-
-
-
-
-
       </Grid>
     </Grid>
   </div>
 </section>
 
   </div>
+<Snackbar
+  open={loginAlert}
+  autoHideDuration={4000}
+  onClose={() => setLoginAlert(false)}
+  anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+>
+  <Alert
+    onClose={() => setLoginAlert(false)}
+    severity="warning"
+    variant="filled"
+    sx={{ width: '100%' }}
+    action={
+      <Button color="inherit" size="small" onClick={() => navigate('/login')}>
+        Login
+      </Button>
+    }
+  >
+    Please login to add items to your cart.
+  </Alert>
+</Snackbar>
+
 </div>
 
   );

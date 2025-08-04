@@ -7,7 +7,8 @@ import { orderReducer } from "./Customers/Order/Reducer";
 import ReviewReducer from "./Customers/Review/Reducer";
 import queryReducer from "./Customers/Query/Reducer";
 import RatingSummaryReducer from "./Customers/Review/ratingSummaryReducer";
-import couponReducer from "./Customers/Coupon/couponReducer";
+import { couponReducer } from "./Customers/Coupon/couponReducer";
+import { chatReducer } from "./Customers/Chat/Reducer";
 
 
 
@@ -23,6 +24,7 @@ const rootReducers=combineReducers({
     query: queryReducer,
     ratingSummaryState: RatingSummaryReducer,
     coupon: couponReducer,
+    chat:chatReducer
 
 
 
