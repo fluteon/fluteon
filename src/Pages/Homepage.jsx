@@ -9,10 +9,23 @@ import { homeCarouselData } from "../customer/Components/Carousel/HomeCaroselDat
 import FluteonLoader from "./FluteonLoader";
 
 const categoriesToFetch = [
-  { name: "formal_pants", label: "Formal Pants" },
-  { name: "blazer", label: "Blazers" },
-  { name: "satin_shirts", label: "Satin Shirts" },
+  {
+    name: "formal_pants",
+    label: "Formal Pants",
+    path: "/women/bottom_wear/formal_pants",
+  },
+  {
+    name: "blazer",
+    label: "Blazers",
+    path: "/women/blazers/blazer",
+  },
+  {
+    name: "satin_shirts",
+    label: "Satin Shirts",
+    path: "/women/shirts/satin_shirts",
+  },
 ];
+
 
 const Homepage = () => {
   const dispatch = useDispatch();
@@ -68,37 +81,29 @@ if (showIntroLoader || !dataReady) {
 }
   return (
     <div>
-    <Helmet>
+<Helmet>
   <title>Fluteon | Premium Women's Fashion</title>
-  <meta
-    name="description"
-    content="Fluteon brings you premium-quality formal wear for women – discover curated pants, satin shirts, and blazers designed for modern Indian women. Shop now!"
-  />
-  <meta
-    name="keywords"
-    content="Fluteon, women's fashion India, formal wear women, satin shirts, blazers, office wear, trendy pants, modern Indian fashion"
-  />
-  <link rel="canonical" href="https://fluteon.com/" />
+  <link rel="canonical" href="https://www.fluteon.com/" />
+  <meta name="description" content="Fluteon brings you premium-quality formal wear for women – discover curated pants, satin shirts, and blazers designed for modern Indian women. Shop now!" />
+  <meta name="keywords" content="Fluteon, women's fashion India, formal wear women, satin shirts, blazers, office wear, trendy pants, modern Indian fashion" />
+  <meta name="robots" content="index, follow" />
 
-  {/* Open Graph (for WhatsApp, FB, etc.) */}
+  {/* Open Graph */}
   <meta property="og:title" content="Fluteon | Premium Women's Fashion" />
-  <meta
-    property="og:description"
-    content="Explore handpicked fashion pieces for modern women – only at Fluteon. Free shipping across India."
-  />
-  <meta property="og:image" content="https://fluteon.com/assets/images/fluteon-logo.png" />
-  <meta property="og:url" content="https://fluteon.com/" />
+  <meta property="og:description" content="Explore handpicked fashion pieces for modern women – only at Fluteon. Free shipping across India." />
+  <meta property="og:image" content="https://www.fluteon.com/assets/images/fluteon-logo.png" />
+  <meta property="og:url" content="https://www.fluteon.com/" />
   <meta property="og:type" content="website" />
 
-  {/* Structured Data (JSON-LD) */}
+  {/* Structured Data */}
   <script type="application/ld+json">
     {JSON.stringify({
       "@context": "https://schema.org",
       "@type": "Store",
-      "@id": "https://fluteon.com/#organization",
+      "@id": "https://www.fluteon.com/#organization",
       "name": "Fluteon",
-      "url": "https://fluteon.com/",
-      "logo": "https://fluteon.com/assets/images/fluteon-logo.png",
+      "url": "https://www.fluteon.com/",
+      "logo": "https://www.fluteon.com/assets/images/fluteon-logo.png",
       "sameAs": [
         "https://www.instagram.com/fluteostore",
         "https://www.facebook.com/fluteostore"
@@ -114,7 +119,7 @@ if (showIntroLoader || !dataReady) {
       },
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "https://fluteon.com/search?query={search_term_string}",
+        "target": "https://www.fluteon.com/search?query={search_term_string}",
         "query-input": "required name=search_term_string"
       }
     })}
@@ -122,14 +127,17 @@ if (showIntroLoader || !dataReady) {
 </Helmet>
 
 
+
       <HomeCarousel images={homeCarouselData} />
       <div className="space-y-10">
         {categoriesToFetch.map((cat) => (
-          <HomeProductSection
-            key={cat.name}
-            section={cat.label}
-            data={categoryData[cat.name]}
-          />
+    <HomeProductSection
+  key={cat.name}
+  section={cat.label}
+  data={categoryData[cat.name]}
+  categoryPath={cat.path}
+/>
+
         ))}
       </div>
     </div>

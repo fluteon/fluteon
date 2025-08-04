@@ -7,7 +7,7 @@ import "./HomeProductSection.css";
 
 const HomeProductCard = lazy(() => import("./HomeProductCard"));
 
-const HomeProductSection = ({ section, data = [] }) => {
+const HomeProductSection = ({ section, data = [], categoryPath }) => {
   const isMobile = useMediaQuery("(max-width: 640px)");
   const arrowSize = isMobile ? 36 : 50;
 
@@ -61,25 +61,30 @@ const HomeProductSection = ({ section, data = [] }) => {
 
   return (
     <section aria-label={`${section} section`} className="relative px-4 sm:px-6 lg:px-8">
-      <Helmet>
-        <title>{section} | Fluteon Fashion</title>
-        <link rel="canonical" href="https://www.fluteon.com/" />
-        <meta name="description" content={`Explore our curated ${section} collection at Fluteon.`} />
-        <meta property="og:title" content={section} />
-        <meta property="og:description" content={`Shop stylish and trending ${section} for women.`} />
-      </Helmet>
+<Helmet>
+  <title>{section} | Fluteon Fashion</title>
+  <meta name="description" content={`Explore our curated ${section} collection at Fluteon.`} />
+  <link rel="canonical" href={`https://www.fluteon.com${categoryPath}`} />
+  <meta property="og:title" content={`${section} | Fluteon`} />
+  <meta property="og:description" content={`Shop stylish and trending ${section} for women.`} />
+  <meta property="og:url" content={`https://www.fluteon.com${categoryPath}`} />
+  <meta property="og:type" content="website" />
+</Helmet>
+
+
 
       <header className="flex items-center justify-between mb-2">
         <h2 className="text-3xl font-bold text-gray-800  pb-1 inline-block">
           {section}
         </h2>
-        <a
-          href={`/shop/${section.toLowerCase().replace(/\s+/g, "_")}`}
-          className="text-blue-600 hover:underline flex items-center text-sm font-medium"
-        >
-          View more
-          <ArrowForwardIosIcon fontSize="small" className="ml-1" />
-        </a>
+<a
+  href={categoryPath}
+  className="text-blue-600 hover:underline flex items-center text-sm font-medium"
+>
+  View more
+  <ArrowForwardIosIcon fontSize="small" className="ml-1" />
+</a>
+
       </header>
 
       <div className="relative">

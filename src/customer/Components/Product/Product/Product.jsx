@@ -1,3 +1,4 @@
+
 import { Fragment, useState } from "react";
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
@@ -73,34 +74,6 @@ export default function Product() {
     const query = searchParams.toString();
     navigate({ search: `?${query}` });
   };
-
-  // useEffect(() => {
-  //   const [minPrice, maxPrice] =
-  //     price === null ? [0, 0] : price.split("-").map(Number);
-  //   const data = {
-  //     category: param.lavelThree,
-  //     colors: colorValue || [],
-  //     sizes: sizeValue || [],
-  //     minPrice: minPrice || 0,
-  //     maxPrice: maxPrice || 10000,
-  //     minDiscount: disccount || 0,
-  //     sort: sortValue || "price_low",
-  //     pageNumber: pageNumber ,
-  //     pageSize: 10,
-  //     stock: stock,
-  //   };
-  //   dispatch(findProducts(data));
-  // }, [
-  //   param.lavelThree,
-  //   colorValue,
-  //   sizeValue,
-  //   price,
-  //   disccount,
-  //   sortValue,
-  //   pageNumber,
-  //   stock,
-  // ]);
-
 
   useEffect(() => {
   const [minPrice, maxPrice] =
